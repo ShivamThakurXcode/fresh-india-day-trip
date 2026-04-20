@@ -1,0 +1,15 @@
+# Robots.txt for India Day Trip
+# https://indiadaytrip.com
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /new/wp-admin/
+Disallow: /new/wp-includes/
+
+# Sitemap
+Sitemap: https://indiadaytrip.com/sitemap.xml
+
+# Crawl-delay (optional, uncomment if needed)
+# Crawl-delay: 1

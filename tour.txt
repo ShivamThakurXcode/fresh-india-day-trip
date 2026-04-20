@@ -1,0 +1,862 @@
+# Same Day Tours
+
+|------------------------------------------------|------------|-------|--------------------------------------------|------------------|--------------|
+| Tour Name                                      | Duration   | Person | Description                                | Location         | Action       |
+|------------------------------------------------|------------|-------|--------------------------------------------|------------------|--------------|
+| Old Delhi Food Tasting Tour                    | 4 hours    | 25    | Old Delhi Food Tasting Tour                | Old Delhi        | Explore Now  |
+| Delhi Private Tour By Car                      | 1 day      | 25    | Delhi Private Day Tour by Car              | Old And New Delhi| Explore Now  |
+| Taj Mahal Sunrise And Old Delhi Tour           | 1 day      | 25    | Taj Mahal Sunrise And Old Delhi Tour       | Delhi Taj Mahal  | Explore Now  |
+| Taj Mahal Sunrise Tour From Delhi              | 1 day      | 25    | Taj Mahal Sunrise Tour From Delhi          | Delhi Taj Mahal  | Explore Now  |
+| Taj Mahal Tour By Gatimaan Express Train       | 1 day      | 25    | Taj Mahal Tour By Gatimaan Express Train   | Delhi Taj Mahal  | Explore Now  |
+| Taj Mahal And Agra Overnight Tour              | 2 days     | 25    | Taj Mahal And Agra Overnight Tour          | Delhi Taj Mahal  | Explore Now  |
+| Taj Mahal And Agra Tour By Premium Car         | 1 day      | 25    | Taj Mahal And Agra Tour By Premium Car     | Delhi Taj Mahal  | Explore Now  |
+| Day Trip To Taj Mahal and Agra Fort By Car     | 1 day      | 25    | Day Trip To Taj Mahal and Agra Fort By Car | Delhi Taj Mahal  | Explore Now  |
+| 2 Days Agra And Jaipur Tour From Delhi         | 2 days     | 25    | 2 Days Agra And Jaipur Tour From Delhi     | Agra Jaipur      | Explore Now  |
+| Evening Delhi City Tour                        | 4 hours    | 25    | Evening Delhi City Tour 4 Hours            | Delhi            | Explore Now  |
+
+
+
+# Golden Triangle Tours
+
+|------------------------------------------------|-----------|-------|----------------------------------------------|-------------------------------|--------------|
+| Tour Name                                      | Duration  | Person| Description                                  | Location                      | Action       |
+|------------------------------------------------|-----------|-------|----------------------------------------------|-------------------------------|--------------|
+| Golden Triangle Tour with Varanasi             | 6 days    | 25    | Golden Triangle Tour With Varanasi           | Delhi, Agra, Jaipur And Varanasi | Explore Now  |
+| Golden Triangle Tour with Udaipur              | 6 days    | 25    | Golden Triangle Tour with Udaipur            | Delhi, Agra, Jaipur And Udaipur  | Explore Now  |
+| Golden Triangle Tour with Ranthambore          | 5 days    | 25    | Golden Triangle Tour with Ranthambore        | Delhi, Agra, Jaipur And Ranthambore | Explore Now  |
+| Golden Triangle Tour with Amritsar             | 7 days    | 25    | Golden Triangle Tour with Amritsar           | Delhi, Agra, Jaipur And Amritsar   | Explore Now  |
+| Golden Triangle Tour 4N5D                      | 5 days    | 25    | Golden Triangle Tour 4N5D                    | Delhi, Agra, Jaipur, India         | Explore Now  |
+| Golden Triangle Tour 3N4D                      | 4 days    | 25    | Golden Triangle Tour 3N4D                    | Delhi, Agra, Jaipur, India         | Explore Now  |
+| Golden Triangle Tour 2N3D                      | 3 days    | 25    | Golden Triangle Tour 2N3D                    | Delhi, Agra, Jaipur, India         | Explore N
+
+
+# Taj Mahal
+
+|------------------------------------------------|-----------|-------|--------------------------------------------|--------------------|--------------|
+| Tour Name                                      | Duration  | Person| Description                                | Location           | Action       |
+|------------------------------------------------|-----------|-------|--------------------------------------------|--------------------|--------------|
+| Taj Mahal Sunrise And Old Delhi Tour           | 1 day     | 25    | Taj Mahal Sunrise And Old Delhi Tour       | Delhi Taj Mahal    | Explore Now  |
+| Taj Mahal Sunrise Tour From Delhi              | 1 day     | 25    | Taj Mahal Sunrise Tour From Delhi          | Delhi Taj Mahal    | Explore Now  |
+| Taj Mahal Tour By Gatimaan Express Train       | 1 day     | 25    | Taj Mahal Tour By Gatimaan Express Train   | Delhi Taj Mahal    | Explore Now  |
+| Taj Mahal And Agra Overnight Tour              | 2 days    | 25    | Taj Mahal And Agra Overnight Tour          | Delhi Taj Mahal    | Explore Now  |
+| Taj Mahal And Agra Tour By Premium Car         | 1 day     | 25    | Taj Mahal And Agra Tour By Premium Car     | Delhi Taj Mahal    | Explore Now  |
+| Day Trip To Taj Mahal and Agra Fort By Car     | 1 day     | 25    | Day Trip To Taj Mahal and Agra Fort By Car | Delhi Taj Mahal    | Explore Now  |
+| 2 Days Agra And Jaipur Tour From Delhi         | 2 days    | 25    | 2 Days Agra And Jaipur Tour From Delhi     | Agra Jaipur        | Explore Now  |
+
+
+
+
+
+###### Temprory text ##############
+
+
+[
+  {
+    "title": "from delhi 2days agra and jaipur tour by car",
+    "slug": "from-delhi-2days-agra-and-jaipur-tour-by-car",
+    "description": "This 2 days Agra and Jaipur tour from Delhi by car is ideal for travelers who want to experience India’s most iconic Mughal and Rajput heritage in a short time. Starting from Delhi, the journey takes you to Agra to explore the majestic Taj Mahal, Agra Fort, and local handicraft markets. On the second day, continue towards Jaipur, the Pink City of Rajasthan, known for its royal palaces, forts, and vibrant culture. This tour is designed for comfort with a private air-conditioned car, professional driver, and flexible sightseeing schedule. It suits couples, families, and first-time visitors seeking a balanced mix of history, architecture, and local experiences. The route offers smooth highways, safe travel, and well-paced sightseeing without rush. With expert planning and reliable services, this tour ensures a memorable North India travel experience while covering two UNESCO World Heritage destinations efficiently.",
+    "tour_highlights": [
+      "Visit the Taj Mahal at Agra",
+      "Explore Agra Fort and city attractions",
+      "Sightseeing in Jaipur including Amber Fort",
+      "Private AC car with experienced driver",
+      "Comfortable overnight stay in Jaipur"
+    ],
+    "included": [
+      "Private air-conditioned car",
+      "Hotel accommodation",
+      "Professional driver",
+      "All sightseeing as per itinerary",
+      "Fuel, parking, and toll taxes"
+    ],
+    "excluded": [
+      "Monument entrance fees",
+      "Personal expenses",
+      "Meals not mentioned",
+      "Camera or video charges",
+      "Travel insurance"
+    ],
+    "itinerary": [
+      "Day 1: Delhi to Agra sightseeing and drive to Jaipur",
+      "Day 2: Jaipur sightseeing and return/drop"
+    ],
+    "pricing": "Starting from INR 9,999 per person (price varies by hotel and season)",
+    "duration": "2 Days / 1 Night",
+    "availability": "Available all year",
+    "category": "Short Tours",
+    "location": "Delhi – Agra – Jaipur",
+    "images": []
+  },
+  {
+    "title": "taj mahal sunrise tour from delhi",
+    "slug": "taj-mahal-sunrise-tour-from-delhi",
+    "description": "The Taj Mahal Sunrise Tour from Delhi offers a magical opportunity to witness India’s most famous monument in the soft morning light. Departing early from Delhi, this tour ensures you reach Agra before sunrise to experience the Taj Mahal at its most serene and photogenic moment. The changing colors of the marble at dawn create an unforgettable visual experience. After the Taj Mahal visit, explore Agra Fort, a UNESCO World Heritage Site that reflects the grandeur of Mughal architecture. This tour is perfect for travelers with limited time who want a premium cultural experience in one day. With private transportation, a knowledgeable guide, and a well-planned schedule, the journey is smooth and comfortable. Ideal for couples, photographers, and history lovers, this sunrise tour provides a peaceful and crowd-free way to explore Agra’s iconic landmarks.",
+    "tour_highlights": [
+      "Sunrise visit to the Taj Mahal",
+      "Guided tour of Agra Fort",
+      "Same-day return to Delhi",
+      "Private air-conditioned vehicle",
+      "Professional local guide"
+    ],
+    "included": [
+      "Private AC car",
+      "Driver allowance",
+      "Local tour guide",
+      "Sightseeing as planned",
+      "All taxes and tolls"
+    ],
+    "excluded": [
+      "Monument entrance tickets",
+      "Breakfast or meals",
+      "Personal shopping expenses",
+      "Camera fees",
+      "Tips and gratuities"
+    ],
+    "itinerary": [
+      "Early morning departure from Delhi",
+      "Sunrise Taj Mahal visit",
+      "Agra Fort sightseeing",
+      "Return to Delhi by evening"
+    ],
+    "pricing": "Starting from INR 5,999 per person",
+    "duration": "Same Day",
+    "availability": "Available all year except Fridays",
+    "category": "Day Tours",
+    "location": "Delhi – Agra – Delhi",
+    "images": []
+  },
+
+  {
+    "title": "from delhi taj mahal and agra overnight tour",
+    "slug": "from-delhi-taj-mahal-and-agra-overnight-tour",
+    "description": "This overnight Agra tour from Delhi allows travelers to explore the city at a relaxed pace without rushing through major attractions. Starting from Delhi, the journey takes you to Agra where you visit the Taj Mahal, Agra Fort, and local markets. An overnight stay in Agra gives you time to enjoy the city’s heritage, cuisine, and atmosphere beyond a single day. The tour is well-suited for couples and families who prefer comfortable travel with private transportation and flexible sightseeing. With experienced drivers and optional guided tours, this package ensures a smooth and enriching travel experience. The overnight stay also allows you to avoid long same-day travel fatigue while enjoying Agra’s Mughal charm. This tour combines convenience, comfort, and cultural depth, making it a popular choice for short North India getaways.",
+    "tour_highlights": [
+      "Visit Taj Mahal and Agra Fort",
+      "Overnight stay in Agra",
+      "Private car from Delhi",
+      "Local market exploration",
+      "Relaxed sightseeing schedule"
+    ],
+    "included": [
+      "Private AC vehicle",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "All road taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals unless specified",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Delhi to Agra sightseeing",
+      "Day 2: Optional sunrise visit and return to Delhi"
+    ],
+    "pricing": "Starting from INR 7,999 per person",
+    "duration": "2 Days / 1 Night",
+    "availability": "Available all year",
+    "category": "Short Tours",
+    "location": "Delhi – Agra",
+    "images": []
+  },
+
+  {
+    "title": "taj mahal sunrise and old delhi tour",
+    "slug": "taj-mahal-sunrise-and-old-delhi-tour",
+    "description": "The Taj Mahal Sunrise and Old Delhi Tour combines two iconic experiences in one memorable journey. Begin early with a sunrise visit to the Taj Mahal in Agra, where the soft morning light enhances the monument’s beauty and calm atmosphere. After exploring Agra Fort, return to Delhi to discover the vibrant charm of Old Delhi. This part of the tour includes narrow lanes, historic mosques, bustling markets, and traditional street life. The contrast between Mughal elegance and Delhi’s lively heritage offers a complete cultural experience in a single day. Designed for travelers who want both monument sightseeing and authentic local exploration, the tour includes private transport and expert guidance. It is ideal for visitors interested in history, photography, and traditional Indian culture, all within a well-managed and time-efficient itinerary.",
+    "tour_highlights": [
+      "Sunrise Taj Mahal visit",
+      "Agra Fort exploration",
+      "Old Delhi heritage walk",
+      "Private AC transportation",
+      "Cultural and historical contrast"
+    ],
+    "included": [
+      "Private car with driver",
+      "Local guide services",
+      "Sightseeing as per itinerary",
+      "Fuel and toll taxes",
+      "All parking charges"
+    ],
+    "excluded": [
+      "Monument entrance fees",
+      "Meals",
+      "Personal expenses",
+      "Camera charges",
+      "Tips"
+    ],
+    "itinerary": [
+      "Early departure from Delhi",
+      "Sunrise Taj Mahal and Agra Fort",
+      "Return to Delhi",
+      "Old Delhi sightseeing"
+    ],
+    "pricing": "Starting from INR 6,999 per person",
+    "duration": "Same Day",
+    "availability": "Available all year except Fridays",
+    "category": "Day Tours",
+    "location": "Delhi – Agra – Old Delhi",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle tour 4n5d",
+    "slug": "golden-triangle-tour-4n5d",
+    "description": "The Golden Triangle Tour 4N5D is one of the most popular travel circuits in India, covering Delhi, Agra, and Jaipur. This well-paced itinerary allows travelers to explore historical landmarks, royal palaces, and cultural heritage across North India. Starting in Delhi, the tour moves to Agra to witness the Taj Mahal and Mughal architecture, followed by Jaipur, known for its forts, palaces, and colorful markets. The five-day duration ensures comfortable travel without rushing, making it suitable for families and first-time visitors. With private transportation, guided sightseeing, and quality accommodations, this tour offers a complete introduction to India’s rich history and traditions. The Golden Triangle route is ideal for understanding the diversity, architecture, and lifestyle of North India in a structured and enjoyable way.",
+    "tour_highlights": [
+      "Delhi city sightseeing",
+      "Taj Mahal and Agra Fort",
+      "Jaipur forts and palaces",
+      "Private car tour",
+      "Balanced travel pace"
+    ],
+    "included": [
+      "Private AC vehicle",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "All tolls and taxes"
+    ],
+    "excluded": [
+      "Monument entry tickets",
+      "Meals not mentioned",
+      "Personal expenses",
+      "Camera fees",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Arrival in Delhi sightseeing",
+      "Day 2: Delhi to Agra",
+      "Day 3: Agra to Jaipur",
+      "Day 4: Jaipur sightseeing",
+      "Day 5: Departure"
+    ],
+    "pricing": "Starting from INR 18,999 per person",
+    "duration": "5 Days / 4 Nights",
+    "availability": "Available all year",
+    "category": "Golden Triangle Tours",
+    "location": "Delhi – Agra – Jaipur",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle tour with amritsar 6n7d",
+    "slug": "golden-triangle-tour-with-amritsar-6n7d",
+    "description": "The Golden Triangle Tour with Amritsar 6N7D extends the classic Delhi, Agra, and Jaipur circuit by adding the spiritual and cultural city of Amritsar. Along with iconic attractions like the Taj Mahal and Jaipur’s royal forts, this tour includes a visit to the Golden Temple, one of India’s most sacred sites. The itinerary blends history, spirituality, and cultural diversity, offering travelers a deeper understanding of North India. Comfortable travel arrangements, guided sightseeing, and well-planned routes ensure a smooth experience across multiple cities. This tour is ideal for travelers seeking both heritage and spiritual enrichment within a single journey. From Mughal monuments to Sikh traditions, the tour offers a balanced and meaningful travel experience.",
+    "tour_highlights": [
+      "Golden Temple visit in Amritsar",
+      "Classic Golden Triangle sightseeing",
+      "Wagah Border ceremony",
+      "Private guided tour",
+      "Cultural and spiritual experience"
+    ],
+    "included": [
+      "Private AC transportation",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per itinerary",
+      "All road taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not mentioned",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1-2: Delhi sightseeing",
+      "Day 3: Agra visit",
+      "Day 4: Jaipur sightseeing",
+      "Day 5-6: Amritsar visit",
+      "Day 7: Departure"
+    ],
+    "pricing": "Starting from INR 29,999 per person",
+    "duration": "7 Days / 6 Nights",
+    "availability": "Available all year",
+    "category": "Extended Golden Triangle Tours",
+    "location": "Delhi – Agra – Jaipur – Amritsar",
+    "images": []
+  },
+
+  {
+    "title": "taj mahal tour by gatimaan express train",
+    "slug": "taj-mahal-tour-by-gatimaan-express-train",
+    "description": "The Taj Mahal Tour by Gatimaan Express Train is the fastest and most comfortable way to visit Agra from Delhi. Gatimaan Express offers a smooth and time-efficient rail journey, allowing travelers to maximize sightseeing time in Agra. This tour includes a guided visit to the Taj Mahal and Agra Fort, making it ideal for travelers who prefer train travel over long road journeys. With early morning departure and same-day return, the tour is perfect for business travelers, families, and senior citizens. The combination of modern train facilities and well-organized local transfers ensures a hassle-free experience. This tour provides a convenient, reliable, and comfortable option to explore Agra’s iconic monuments in one day.",
+    "tour_highlights": [
+      "Fast Gatimaan Express train journey",
+      "Guided Taj Mahal visit",
+      "Agra Fort sightseeing",
+      "Same-day return",
+      "Comfortable and time-saving travel"
+    ],
+    "included": [
+      "Train tickets",
+      "Local AC transport in Agra",
+      "Tour guide",
+      "Sightseeing as planned",
+      "All applicable taxes"
+    ],
+    "excluded": [
+      "Monument entrance fees",
+      "Meals other than train service",
+      "Personal expenses",
+      "Camera charges",
+      "Tips"
+    ],
+    "itinerary": [
+      "Morning train from Delhi",
+      "Taj Mahal and Agra Fort visit",
+      "Evening return by train"
+    ],
+    "pricing": "Starting from INR 6,499 per person",
+    "duration": "Same Day",
+    "availability": "Available all year except Fridays",
+    "category": "Train Tours",
+    "location": "Delhi – Agra – Delhi",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle tours with varanasi 5n6d",
+    "slug": "golden-triangle-tours-with-varanasi-5n6d",
+    "description": "The Golden Triangle Tour with Varanasi combines North India’s most famous heritage cities with one of the world’s oldest living spiritual centers. Along with Delhi, Agra, and Jaipur, this tour includes Varanasi, known for its sacred ghats, temples, and spiritual rituals along the Ganges River. The itinerary offers a perfect mix of history, culture, and spirituality. Travelers experience Mughal monuments, Rajput architecture, and deeply rooted religious traditions in one comprehensive journey. Comfortable transportation, guided sightseeing, and well-planned stays ensure a smooth experience. This tour is ideal for travelers seeking both cultural exploration and spiritual insight within a limited timeframe.",
+    "tour_highlights": [
+      "Ganga Aarti in Varanasi",
+      "Golden Triangle sightseeing",
+      "Taj Mahal and Jaipur forts",
+      "Cultural and spiritual blend",
+      "Private guided travel"
+    ],
+    "included": [
+      "Private AC transport",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "All taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not specified",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Delhi sightseeing",
+      "Day 2: Agra visit",
+      "Day 3: Jaipur sightseeing",
+      "Day 4-5: Varanasi visit",
+      "Day 6: Departure"
+    ],
+    "pricing": "Starting from INR 26,999 per person",
+    "duration": "6 Days / 5 Nights",
+    "availability": "Available all year",
+    "category": "Golden Triangle Tours",
+    "location": "Delhi – Agra – Jaipur – Varanasi",
+    "images": []
+  },
+
+  {
+    "title": "taj mahal and agra tour by premium cars",
+    "slug": "taj-mahal-and-agra-tour-by-premium-cars",
+    "description": "The Taj Mahal and Agra Tour by Premium Cars is designed for travelers who value comfort, privacy, and luxury while exploring Agra’s iconic attractions. This tour includes a private premium vehicle with professional chauffeur service, ensuring a smooth and stylish journey from Delhi to Agra. Visit the Taj Mahal, Agra Fort, and other local highlights at a relaxed pace. Ideal for couples, business travelers, and luxury seekers, the tour focuses on personalized service and flexible scheduling. The premium car experience enhances overall comfort, making the journey as enjoyable as the destination. This tour offers a refined way to explore Agra in a single day or with optional extensions.",
+    "tour_highlights": [
+      "Luxury premium car travel",
+      "Taj Mahal and Agra Fort visit",
+      "Personalized itinerary",
+      "Professional chauffeur",
+      "Comfort-focused experience"
+    ],
+    "included": [
+      "Premium AC vehicle",
+      "Driver allowance",
+      "Sightseeing as planned",
+      "Fuel and tolls",
+      "All taxes"
+    ],
+    "excluded": [
+      "Monument entry tickets",
+      "Meals",
+      "Personal expenses",
+      "Camera charges",
+      "Tips"
+    ],
+    "itinerary": [
+      "Morning departure from Delhi",
+      "Agra sightseeing",
+      "Return to Delhi"
+    ],
+    "pricing": "Starting from INR 8,999 per person",
+    "duration": "Same Day",
+    "availability": "Available all year",
+    "category": "Luxury Tours",
+    "location": "Delhi – Agra",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle tour 2n3d",
+    "slug": "golden-triangle-tour-2n3d",
+    "description": "The Golden Triangle Tour 2N3D is a compact itinerary covering Delhi, Agra, and Jaipur within three days. Designed for travelers with limited time, this tour focuses on key highlights such as the Taj Mahal, Jaipur’s forts, and Delhi’s historic landmarks. The route is efficient and well-organized, ensuring comfortable travel and maximum sightseeing. Ideal for first-time visitors, the tour provides a quick yet meaningful introduction to North India’s cultural heritage. Private transportation, guided sightseeing, and carefully selected stops make this tour convenient and enjoyable. Despite its short duration, the tour captures the essence of the Golden Triangle experience.",
+    "tour_highlights": [
+      "Short Golden Triangle circuit",
+      "Taj Mahal visit",
+      "Jaipur heritage sightseeing",
+      "Private AC car",
+      "Time-efficient itinerary"
+    ],
+    "included": [
+      "Private transportation",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as planned",
+      "All road taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not mentioned",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Delhi to Agra",
+      "Day 2: Agra to Jaipur",
+      "Day 3: Jaipur sightseeing and departure"
+    ],
+    "pricing": "Starting from INR 14,999 per person",
+    "duration": "3 Days / 2 Nights",
+    "availability": "Available all year",
+    "category": "Golden Triangle Tours",
+    "location": "Delhi – Agra – Jaipur",
+    "images": []
+  },
+
+  {
+    "title": "from delhi day trip to taj mahal and agra fort by car",
+    "slug": "from-delhi-day-trip-to-taj-mahal-and-agra-fort-by-car",
+    "description": "This day trip from Delhi to the Taj Mahal and Agra Fort by car is ideal for travelers seeking a comfortable and flexible same-day excursion. The journey begins early in the morning with a private air-conditioned car, allowing ample time to explore Agra’s most famous landmarks. Visit the Taj Mahal, one of the Seven Wonders of the World, followed by a guided tour of Agra Fort. The itinerary is designed to avoid rush and ensure a smooth return to Delhi by evening. Suitable for families, couples, and solo travelers, this tour offers convenience, safety, and a well-managed schedule for a memorable Agra visit.",
+    "tour_highlights": [
+      "Private car day trip",
+      "Taj Mahal visit",
+      "Agra Fort exploration",
+      "Flexible sightseeing time",
+      "Same-day return"
+    ],
+    "included": [
+      "Private AC car",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "Fuel and toll taxes",
+      "Parking charges"
+    ],
+    "excluded": [
+      "Monument entry tickets",
+      "Meals",
+      "Personal expenses",
+      "Camera fees",
+      "Tips"
+    ],
+    "itinerary": [
+      "Morning departure from Delhi",
+      "Taj Mahal and Agra Fort visit",
+      "Evening return to Delhi"
+    ],
+    "pricing": "Starting from INR 4,999 per person",
+    "duration": "Same Day",
+    "availability": "Available all year except Fridays",
+    "category": "Day Trips",
+    "location": "Delhi – Agra – Delhi",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle tour with udaipur 7n8d",
+    "slug": "golden-triangle-tour-with-udaipur-7n8d",
+    "description": "The Golden Triangle Tour with Udaipur 7N8D combines North India’s iconic heritage cities with the romantic charm of Udaipur. Along with Delhi, Agra, and Jaipur, this tour includes Udaipur, known for its lakes, palaces, and serene atmosphere. The itinerary offers a balanced mix of history, royal architecture, and scenic beauty. Travelers enjoy comfortable travel, guided sightseeing, and carefully planned stays across multiple destinations. This extended tour is ideal for travelers seeking a deeper exploration of Rajasthan along with classic Golden Triangle highlights.",
+    "tour_highlights": [
+      "Golden Triangle sightseeing",
+      "Udaipur lake and palace tour",
+      "Royal Rajasthan experience",
+      "Private guided travel",
+      "Scenic and cultural diversity"
+    ],
+    "included": [
+      "Private AC transport",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per itinerary",
+      "All applicable taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not specified",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1-2: Delhi sightseeing",
+      "Day 3: Agra visit",
+      "Day 4-5: Jaipur sightseeing",
+      "Day 6-7: Udaipur visit",
+      "Day 8: Departure"
+    ],
+    "pricing": "Starting from INR 34,999 per person",
+    "duration": "8 Days / 7 Nights",
+    "availability": "Available all year",
+    "category": "Extended Tours",
+    "location": "Delhi – Agra – Jaipur – Udaipur",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle tour with ranthambore 4n5d",
+    "slug": "golden-triangle-tour-with-ranthambore-4n5d",
+    "description": "The Golden Triangle Tour with Ranthambore 4N5D adds a wildlife experience to the classic Delhi, Agra, and Jaipur circuit. Along with visiting the Taj Mahal and Jaipur’s forts, travelers enjoy a jungle safari in Ranthambore National Park, known for its tiger population. This tour offers a unique blend of heritage and nature, making it ideal for wildlife enthusiasts and families. The itinerary is well-balanced, ensuring comfortable travel and sufficient time for sightseeing and safari activities. With professional planning and reliable transport, the tour provides a memorable North India experience beyond traditional city tours.",
+    "tour_highlights": [
+      "Ranthambore jungle safari",
+      "Taj Mahal and Agra Fort",
+      "Jaipur heritage sightseeing",
+      "Wildlife and culture blend",
+      "Private guided tour"
+    ],
+    "included": [
+      "Private AC transportation",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Safari (subject to availability)",
+      "All road taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Safari permit extras",
+      "Meals not specified",
+      "Personal expenses",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Delhi sightseeing",
+      "Day 2: Agra visit",
+      "Day 3: Ranthambore safari",
+      "Day 4: Jaipur sightseeing",
+      "Day 5: Departure"
+    ],
+    "pricing": "Starting from INR 27,999 per person",
+    "duration": "5 Days / 4 Nights",
+    "availability": "Seasonal availability",
+    "category": "Wildlife Tours",
+    "location": "Delhi – Agra – Ranthambore – Jaipur",
+    "images": []
+  },
+
+  {
+    "title": "golden triangle toui 3n4d",
+    "slug": "golden-triangle-toui-3n4d",
+    "description": "The Golden Triangle Toui 3N4D is a well-structured tour covering Delhi, Agra, and Jaipur over four days. Designed for travelers seeking a slightly relaxed pace compared to shorter itineraries, this tour allows more time at each destination. Explore Delhi’s historic sites, witness the beauty of the Taj Mahal in Agra, and experience Jaipur’s royal heritage. The itinerary balances travel and sightseeing, ensuring comfort and cultural immersion. Ideal for families and first-time visitors, the tour offers a comprehensive introduction to North India’s most famous travel circuit.",
+    "tour_highlights": [
+      "Four-day Golden Triangle tour",
+      "Taj Mahal and Agra Fort",
+      "Jaipur forts and palaces",
+      "Comfortable private transport",
+      "Balanced itinerary"
+    ],
+    "included": [
+      "Private AC vehicle",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "All applicable taxes"
+    ],
+    "excluded": [
+      "Monument entry tickets",
+      "Meals not mentioned",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Delhi sightseeing",
+      "Day 2: Agra visit",
+      "Day 3: Jaipur sightseeing",
+      "Day 4: Departure"
+    ],
+    "pricing": "Starting from INR 17,999 per person",
+    "duration": "4 Days / 3 Nights",
+    "availability": "Available all year",
+    "category": "Golden Triangle Tours",
+    "location": "Delhi – Agra – Jaipur",
+    "images": []
+  },
+
+  {
+    "title": "royal rajasthan tour 5n6d",
+    "slug": "royal-rajasthan-tour-5n6d",
+    "description": "The Royal Rajasthan Tour 5N6D showcases the grandeur, culture, and royal heritage of Rajasthan. This tour covers major cities known for palaces, forts, and vibrant traditions. Travelers experience historic architecture, colorful markets, and traditional Rajasthani hospitality. The itinerary is designed for comfortable travel with guided sightseeing and quality accommodations. Ideal for cultural explorers, this tour highlights Rajasthan’s royal past and living traditions. From majestic forts to local experiences, the journey offers a deep insight into one of India’s most culturally rich states.",
+    "tour_highlights": [
+      "Royal forts and palaces",
+      "Cultural city tours",
+      "Traditional Rajasthani experience",
+      "Private guided travel",
+      "Comfortable itinerary"
+    ],
+    "included": [
+      "Private AC transport",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as planned",
+      "All road taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not specified",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1-2: Arrival and city sightseeing",
+      "Day 3-4: Heritage tours",
+      "Day 5-6: Departure"
+    ],
+    "pricing": "Starting from INR 24,999 per person",
+    "duration": "6 Days / 5 Nights",
+    "availability": "Available all year",
+    "category": "Rajasthan Tours",
+    "location": "Rajasthan",
+    "images": []
+  },
+
+  {
+    "title": "old delhi food tasting tour evening 4 hours",
+    "slug": "old-delhi-food-tasting-tour-evening-4-hours",
+    "description": "The Old Delhi Food Tasting Tour is a guided evening experience that introduces travelers to the rich culinary heritage of Delhi. Over four hours, explore narrow lanes, historic markets, and iconic food spots known for traditional recipes. The tour offers insight into local culture, history, and flavors through curated tastings. Ideal for food lovers and cultural explorers, this experience focuses on authenticity and safety. Guided by local experts, travelers enjoy a flavorful journey through Old Delhi’s vibrant street food scene while learning about the area’s heritage.",
+    "tour_highlights": [
+      "Guided food tasting experience",
+      "Traditional Old Delhi cuisine",
+      "Local market exploration",
+      "Cultural storytelling",
+      "Evening walking tour"
+    ],
+    "included": [
+      "Local food tastings",
+      "Professional guide",
+      "Walking tour",
+      "Cultural insights",
+      "All service charges"
+    ],
+    "excluded": [
+      "Personal purchases",
+      "Extra food or drinks",
+      "Transportation",
+      "Tips",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Evening meeting point",
+      "Food tasting stops",
+      "Market walk and local insights"
+    ],
+    "pricing": "Starting from INR 2,499 per person",
+    "duration": "4 Hours",
+    "availability": "Available all year",
+    "category": "Food Tours",
+    "location": "Old Delhi",
+    "images": []
+  },
+
+  {
+    "title": "colorful rajasthan tour 8d9n",
+    "slug": "colorful-rajasthan-tour-8d9n",
+    "description": "The Colorful Rajasthan Tour 8D9N offers an in-depth exploration of Rajasthan’s diverse culture, architecture, and landscapes. This extended itinerary covers multiple cities known for forts, palaces, deserts, and traditional lifestyles. Travelers experience vibrant markets, local traditions, and historical landmarks at a relaxed pace. Designed for cultural enthusiasts, the tour highlights Rajasthan’s royal legacy and everyday life. Comfortable transportation, guided sightseeing, and thoughtfully planned stays ensure a rich and immersive travel experience across the state.",
+    "tour_highlights": [
+      "Extended Rajasthan exploration",
+      "Multiple heritage cities",
+      "Cultural and local experiences",
+      "Traditional markets",
+      "Comfort-focused itinerary"
+    ],
+    "included": [
+      "Private AC transport",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "All taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not specified",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1-3: Major city sightseeing",
+      "Day 4-6: Cultural experiences",
+      "Day 7-8: Heritage tours",
+      "Day 9: Departure"
+    ],
+    "pricing": "Starting from INR 39,999 per person",
+    "duration": "9 Days / 8 Nights",
+    "availability": "Available all year",
+    "category": "Rajasthan Tours",
+    "location": "Rajasthan",
+    "images": []
+  },
+
+  {
+    "title": "rajasthan heritage tour 4n5d",
+    "slug": "rajasthan-heritage-tour-4n5d",
+    "description": "The Rajasthan Heritage Tour 4N5D focuses on the historical and architectural legacy of Rajasthan. This tour includes visits to famous forts, palaces, and heritage sites that reflect the royal past of the region. Designed for travelers interested in history and culture, the itinerary offers guided sightseeing and comfortable travel. The tour provides a concise yet enriching experience of Rajasthan’s heritage within a manageable timeframe.",
+    "tour_highlights": [
+      "Historic forts and palaces",
+      "Guided heritage sightseeing",
+      "Cultural city tours",
+      "Comfortable travel",
+      "Short heritage itinerary"
+    ],
+    "included": [
+      "Private AC transport",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as planned",
+      "All road taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not specified",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Arrival and city tour",
+      "Day 2-4: Heritage sightseeing",
+      "Day 5: Departure"
+    ],
+    "pricing": "Starting from INR 22,999 per person",
+    "duration": "5 Days / 4 Nights",
+    "availability": "Available all year",
+    "category": "Rajasthan Tours",
+    "location": "Rajasthan",
+    "images": []
+  },
+
+  {
+    "title": "rajasthan city tour 3n4d",
+    "slug": "rajasthan-city-tour-3n4d",
+    "description": "The Rajasthan City Tour 3N4D is a short and focused itinerary covering key urban destinations in Rajasthan. The tour highlights city-based attractions, including palaces, forts, markets, and cultural landmarks. Ideal for travelers with limited time, this tour provides a structured introduction to Rajasthan’s urban heritage. Comfortable travel arrangements and guided sightseeing ensure a smooth experience while capturing the essence of the region.",
+    "tour_highlights": [
+      "Key Rajasthan city attractions",
+      "Palaces and forts",
+      "Local markets",
+      "Short and efficient itinerary",
+      "Guided sightseeing"
+    ],
+    "included": [
+      "Private AC transportation",
+      "Hotel accommodation",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "All taxes"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals not mentioned",
+      "Personal expenses",
+      "Camera charges",
+      "Insurance"
+    ],
+    "itinerary": [
+      "Day 1: Arrival and city tour",
+      "Day 2-3: Sightseeing",
+      "Day 4: Departure"
+    ],
+    "pricing": "Starting from INR 18,499 per person",
+    "duration": "4 Days / 3 Nights",
+    "availability": "Available all year",
+    "category": "Rajasthan Tours",
+    "location": "Rajasthan",
+    "images": []
+  },
+
+  {
+    "title": "delhi private day tour by car",
+    "slug": "delhi-private-day-tour-by-car",
+    "description": "The Delhi Private Day Tour by Car offers a comfortable and personalized way to explore India’s capital city. This tour covers major historical, cultural, and modern attractions of Delhi with a flexible schedule. Ideal for first-time visitors and families, the private car ensures convenience and safety. With optional guided commentary, travelers gain insights into Delhi’s rich past and vibrant present. The tour is designed to be relaxed, informative, and customizable according to interests.",
+    "tour_highlights": [
+      "Private car city tour",
+      "Major Delhi attractions",
+      "Flexible itinerary",
+      "Comfortable travel",
+      "Optional local guide"
+    ],
+    "included": [
+      "Private AC vehicle",
+      "Driver allowance",
+      "Sightseeing as per plan",
+      "Fuel and toll taxes",
+      "Parking charges"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals",
+      "Personal expenses",
+      "Camera charges",
+      "Tips"
+    ],
+    "itinerary": [
+      "Morning pickup",
+      "City sightseeing",
+      "Evening drop-off"
+    ],
+    "pricing": "Starting from INR 3,999 per person",
+    "duration": "Same Day",
+    "availability": "Available all year",
+    "category": "City Tours",
+    "location": "Delhi",
+    "images": []
+  },
+
+  {
+    "title": "evening delhi city tour 4 hours",
+    "slug": "evening-delhi-city-tour-4-hours",
+    "description": "The Evening Delhi City Tour is a short and relaxed exploration of Delhi’s prominent landmarks during the cooler evening hours. Ideal for travelers with limited time, this tour focuses on illuminated monuments, local streets, and cultural spots. The four-hour duration allows a comfortable pace while enjoying the city’s atmosphere after sunset. With private transportation and optional guidance, the tour offers a pleasant introduction to Delhi’s charm in the evening.",
+    "tour_highlights": [
+      "Evening sightseeing experience",
+      "Illuminated landmarks",
+      "Short city tour",
+      "Comfortable private travel",
+      "Relaxed schedule"
+    ],
+    "included": [
+      "Private AC car",
+      "Driver allowance",
+      "Sightseeing as planned",
+      "Fuel and toll taxes",
+      "Parking charges"
+    ],
+    "excluded": [
+      "Monument entry fees",
+      "Meals",
+      "Personal expenses",
+      "Camera charges",
+      "Tips"
+    ],
+    "itinerary": [
+      "Evening pickup",
+      "City sightseeing",
+      "Drop-off"
+    ],
+    "pricing": "Starting from INR 2,999 per person",
+    "duration": "4 Hours",
+    "availability": "Available all year",
+    "category": "City Tours",
+    "location": "Delhi",
+    "images": []
+  }
+]

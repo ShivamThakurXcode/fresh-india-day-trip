@@ -1,0 +1,60 @@
+### HOSTINGER LITESHIELD RECAPTCHA, DO NOT REMOVE THIS LINE ###
+RewriteEngine On
+LsRecaptcha 100
+RewriteRule .* - [E=verifycaptcha:drop]
+### HOSTINGER LITESHIELD RECAPTCHA, DO NOT REMOVE THIS LINE ###
+RewriteEngine On
+
+# EMERGENCY DDoS PROTECTION
+# Block suspicious user agents
+RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^-?$ [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]get [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Bb]andit [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Bb]ot [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Rr]obot [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Cc]rawler [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Ss]canner [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Ss]pyder [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^curl [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^wget [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^python [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^scrapy [NC]
+RewriteRule ^api/ - [F,L]
+
+# Block requests without proper headers for API
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteCond %{HTTP:Accept} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^$
+RewriteRule ^ - [F,L]
+
+# Limit POST requests to mail.php
+RewriteCond %{REQUEST_METHOD} POST
+RewriteCond %{REQUEST_URI} ^/api/mail\.php$
+RewriteCond %{REMOTE_ADDR} ^(.*)
+RewriteRule .* - [E=API_REQUEST:1]
+
+# Handle tour detail pages
+RewriteRule ^tour/([a-zA-Z0-9-]+)$ index.php?type=tour&slug=$1 [L,QSA]
+
+# Handle blog detail pages
+RewriteRule ^blog/([a-zA-Z0-9-]+)$ index.php?type=blog&slug=$1 [L,QSA]
+
+# Handle other pages (if needed)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
+
+# Protect sensitive files
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent directory listing
+Options -Indexes
