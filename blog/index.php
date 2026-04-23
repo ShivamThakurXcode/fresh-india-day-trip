@@ -35,7 +35,7 @@
     <!-- Blog Area -->
     <section class="space">
         <div class="container">
-            <div class="row">
+            <div class="row gx-24 gy-30">
                 <?php
                 // Get all published blogs
                 $blogs = getBlogs(null, null, 'published');
@@ -46,7 +46,28 @@
                     </div>
                 <?php else: ?>
                     <?php foreach ($blogs as $blog): ?>
-                        <?php echo renderBlogCard($blog, 'grid', '../blog-detail.php?slug='); ?>
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <div class="blog-grid2 th-ani">
+                                <div class="blog-img global-img">
+                                    <img src="../assets/img/blog/<?php echo $blog['featured_image'] ?: 'blog-tour.webp'; ?>" 
+                                         alt="<?php echo htmlspecialchars($blog['title']); ?>">
+                                </div>
+                                <div class="blog-grid2_content">
+                                    <div class="blog-meta">
+                                        <span><?php echo date('M d, Y', strtotime($blog['publication_date'])); ?></span>
+                                        <span><?php $wordCount = str_word_count(strip_tags($blog['content']));
+    echo ceil($wordCount / 200); ?> min read</span>
+                                    </div>
+                                    <h3 class="box-title">
+                                        <a href="<?php echo $blog['slug']; ?>">
+                                            <?php echo htmlspecialchars($blog['title']); ?>
+                                        </a>
+                                    </h3>
+                                    <a href="<?php echo $blog['slug']; ?>" 
+                                       class="th-btn style4 th-icon">Read More</a>
+                                </div>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>

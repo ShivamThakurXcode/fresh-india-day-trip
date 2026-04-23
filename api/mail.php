@@ -1,111 +1,190 @@
 <?php
 require_once '../config.php';
 
-header('Content-Type: application/json');
+session_start();
 
-// EMERGENCY RATE LIMITING - Block DDoS attacks
-function checkRateLimit($ip, $email = null) {
-    $rateFile = '../rate_limit.json';
-    $limits = [];
+header('Content-Type: application/json');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
+// CSRF Token Generation
+function generateCSRFToken() {
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+// CSRF Token Verification
+function verifyCSRFToken($token) {
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+// Load .env file
+$envFile = '../.env';
+if (file_exists($envFile)) {
+    $envContent = file_get_contents($envFile);
+    $envLines = explode("\n", $envContent);
+    foreach ($envLines as $line) {
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $_ENV[trim($key)] = trim($value);
+        }
+    }
+}
+
+// OPTIMIZED RATE LIMITING - Memory-based with periodic cleanup
+function checkRateLimit($ip) {
+    static $rateCache = null;
+    static $lastCleanup = 0;
+    $now = time();
     
-    // Try to read existing limits
-    if (file_exists($rateFile)) {
-        $json = file_get_contents($rateFile);
-        if ($json !== false) {
-            $limits = json_decode($json, true) ?: [];
+    // Initialize cache if needed
+    if ($rateCache === null) {
+        $rateFile = '../rate_limit_mail.json';
+        if (file_exists($rateFile)) {
+            $json = @file_get_contents($rateFile);
+            $rateCache = $json ? @json_decode($json, true) : [];
+        } else {
+            $rateCache = [];
+        }
+        $lastCleanup = $now;
+    }
+    
+    // Cleanup old entries every 5 minutes
+    if ($now - $lastCleanup > 300) {
+        foreach ($rateCache as $k => $data) {
+            if ($now - $data['time'] > 300) {
+                unset($rateCache[$k]);
+            }
+        }
+        $lastCleanup = $now;
+        // Write cleanup to file
+        @file_put_contents('../rate_limit_mail.json', json_encode($rateCache), LOCK_EX);
+    }
+    
+    // Check rate limit: 3 requests per 5 minutes per IP
+    if (isset($rateCache[$ip])) {
+        if ($rateCache[$ip]['count'] >= 3) {
+            http_response_code(429);
+            echo json_encode(['success' => false, 'error' => 'Too many requests. Please try again in 5 minutes.']);
+            exit;
+        }
+        $rateCache[$ip]['count']++;
+    } else {
+        $rateCache[$ip] = ['count' => 1, 'time' => $now];
+    }
+}
+
+// Enhanced bot detection with multiple checks
+function blockBots() {
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+    $method = $_SERVER['REQUEST_METHOD'] ?? '';
+    
+    // Block non-POST requests early
+    if ($method !== 'POST') {
+        http_response_code(405);
+        exit('Method not allowed');
+    }
+    
+    // Block common bot user agents
+    $botPatterns = [
+        'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'python', 
+        'scrapy', 'java', 'perl', 'ruby', 'go-http', 'aiohttp', 'python-requests',
+        'bingbot', 'googlebot', 'facebookexternalhit', 'meta-externalagent',
+        'slurp', 'msnbot', 'teoma', 'yandex', 'httpclient', 'okhttp',
+        'postman', 'insomnia', 'httpie', 'axios', 'fetch'
+    ];
+    
+    foreach ($botPatterns as $pattern) {
+        if (stripos($userAgent, $pattern) !== false) {
+            http_response_code(403);
+            exit('Access denied');
         }
     }
     
-    $now = time();
-    $key = $email ? "$ip|$email" : "$ip|ip_only";
-    
-    // Clean old entries (older than 1 hour)
-    $limits = array_filter($limits, function($data) use ($now) {
-        return $now - $data['time'] < 3600;
-    });
-    
-    // Check if IP is blocked
-    if (isset($limits[$key]) && $limits[$key]['count'] >= 3) {
-        http_response_code(429);
-        echo json_encode(['success' => false, 'error' => 'Rate limit exceeded. Please try again later.']);
-        exit;
-    }
-    
-    // Update counter
-    if (!isset($limits[$key])) {
-        $limits[$key] = ['count' => 1, 'time' => $now];
-    } else {
-        $limits[$key]['count']++;
-    }
-    
-    // Save back to file
-    file_put_contents($rateFile, json_encode($limits));
-    return true;
-}
-
-// Get client IP
-$ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_X_REAL_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-
-// Block high-risk countries during attack
-$blocked_countries = ['US', 'BR', 'MX', 'SA']; // Based on your analytics
-$country_code = file_get_contents("http://ip-api.com/json/$ip?fields=countryCode");
-if ($country_code !== false) {
-    $country_data = json_decode($country_code, true);
-    if (in_array($country_data['countryCode'] ?? '', $blocked_countries)) {
+    // Block requests without proper browser headers
+    if (empty($userAgent) || empty($accept)) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Access denied']);
-        exit;
+        exit('Access denied');
+    }
+    
+    // Validate Accept header - should contain text/html or application/json
+    if (!preg_match('/text\/html|application\/json/i', $accept)) {
+        http_response_code(403);
+        exit('Access denied');
+    }
+    
+    // Block requests from suspicious IPs (from your logs)
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    $blockedIPs = ['191.96.168.95'];
+    if (in_array($ip, $blockedIPs)) {
+        http_response_code(403);
+        exit('Access denied');
+    }
+    
+    // Check for suspicious request patterns
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($requestUri, '../') !== false || strpos($requestUri, '://') !== false) {
+        http_response_code(403);
+        exit('Access denied');
     }
 }
 
-// Apply rate limiting immediately
+blockBots();
+
+$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 checkRateLimit($ip);
 
-function sendEmailResend($to, $subject, $html) {
-    $apiKey = defined('RESEND_API_KEY') ? RESEND_API_KEY : getenv('RESEND_API_KEY');
+// Import PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+// Load PHPMailer
+require_once '../PHPMailer/PHPMailer-6.8.0/src/PHPMailer.php';
+require_once '../PHPMailer/PHPMailer-6.8.0/src/SMTP.php';
+require_once '../PHPMailer/PHPMailer-6.8.0/src/Exception.php';
+
+function sendEmailSMTP($to, $subject, $html) {
+    $mail = new PHPMailer(true);
     
-    if (empty($apiKey)) {
-        return ['success' => false, 'error' => 'RESEND_API_KEY not configured'];
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $_ENV['SMTP_EMAIL'] ?? 'indiadaytrip@gmail.com';
+        $mail->Password   = $_ENV['SMTP_PASSWORD'] ?? 'your_app_password';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        
+        // Recipients
+        $mail->setFrom($_ENV['SMTP_EMAIL'] ?? 'indiadaytrip@gmail.com', 'India Day Trip');
+        $mail->addAddress($to);
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $html;
+        
+        $mail->send();
+        return ['success' => true, 'message' => 'Email sent successfully'];
+        
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $mail->ErrorInfo];
     }
-
-    $data = [
-        'from' => defined('RESEND_FROM_EMAIL') ? RESEND_FROM_EMAIL : 'onboarding@resend.dev',
-        'to' => [$to],
-        'subject' => $subject,
-        'html' => $html
-    ];
-
-    $ch = curl_init('https://api.resend.com/emails');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Authorization: Bearer ' . $apiKey,
-        'Content-Type: application/json'
-    ]);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    $result = json_decode($response, true);
-    
-    if ($httpCode >= 200 && $httpCode < 300 && isset($result['id'])) {
-        return ['success' => true, 'id' => $result['id']];
-    }
-    
-    return ['success' => false, 'error' => $result['message'] ?? 'Unknown error', 'http_code' => $httpCode];
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-    exit;
-}
+// POST method is already enforced in blockBots() function
 
 $honeypot = $_POST['website_url'] ?? '';
 if (!empty($honeypot)) {
-    echo json_encode(['success' => true, 'message' => 'Message received']);
-    exit;
+    exit;  // Silently exit - don't send anything to bots
 }
 
 // Enhanced CAPTCHA validation
@@ -131,18 +210,93 @@ if (!verifyCSRFToken($csrfToken)) {
     exit;
 }
 
-$formType = $_POST['form_type'] ?? 'booking';
-$firstName = trim($_POST['first_name'] ?? '');
-$lastName = trim($_POST['last_name'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$phone = trim($_POST['phone'] ?? '');
-$tourName = trim($_POST['tour_name'] ?? '');
-$travelDate = trim($_POST['travel_date'] ?? '');
-$guests = trim($_POST['guests'] ?? '');
-$message = trim($_POST['message'] ?? '');
+// Strict input validation and sanitization
+function validateInput($data, $type, $maxLength = 255) {
+    $data = trim($data);
+    
+    // Check length
+    if (strlen($data) > $maxLength) {
+        return false;
+    }
+    
+    // Check for null bytes and control characters
+    if (strpos($data, "\0") !== false || preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', $data)) {
+        return false;
+    }
+    
+    switch ($type) {
+        case 'name':
+            // Allow letters, spaces, hyphens, apostrophes only
+            return preg_match('/^[a-zA-Z\s\-\'\.]{1,50}$/', $data);
+            
+        case 'email':
+            // Strict email validation
+            return filter_var($data, FILTER_VALIDATE_EMAIL) && 
+                   preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $data);
+            
+        case 'phone':
+            // Allow international phone numbers with +, digits, spaces, hyphens, parentheses
+            return preg_match('/^[\+]?[0-9\s\-\(\)]{7,20}$/', $data);
+            
+        case 'text':
+            // General text - allow most characters but limit dangerous ones
+            return !preg_match('/<script|javascript:|on\w+=/i', $data);
+            
+        case 'alphanumeric':
+            // Letters and numbers only
+            return preg_match('/^[a-zA-Z0-9\s\-\'\.,]+$/', $data);
+            
+        default:
+            return false;
+    }
+}
 
-if (empty($firstName) || empty($lastName) || empty($email)) {
-    echo json_encode(['success' => false, 'error' => 'Required fields missing']);
+// Validate and sanitize all inputs
+$formType = isset($_POST['form_type']) && in_array($_POST['form_type'], ['booking', 'contact']) ? $_POST['form_type'] : 'booking';
+
+$firstName = $_POST['first_name'] ?? '';
+$lastName = $_POST['last_name'] ?? '';
+$email = $_POST['email'] ?? '';
+$phone = $_POST['phone'] ?? '';
+$tourName = $_POST['tour_name'] ?? '';
+$travelDate = $_POST['travel_date'] ?? '';
+$guests = $_POST['guests'] ?? '';
+$message = $_POST['message'] ?? '';
+
+// Validate required fields
+$errors = [];
+if (!validateInput($firstName, 'name')) {
+    $errors[] = 'Invalid first name';
+}
+if (!validateInput($lastName, 'name')) {
+    $errors[] = 'Invalid last name';
+}
+if (!validateInput($email, 'email')) {
+    $errors[] = 'Invalid email address';
+}
+
+// Validate optional fields
+if (!empty($phone) && !validateInput($phone, 'phone')) {
+    $errors[] = 'Invalid phone number';
+}
+if (!empty($tourName) && !validateInput($tourName, 'text', 100)) {
+    $errors[] = 'Invalid tour name';
+}
+if (!empty($travelDate)) {
+    // Validate date format (YYYY-MM-DD or DD/MM/YYYY)
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$|^\d{2}\/\d{2}\/\d{4}$/', $travelDate)) {
+        $errors[] = 'Invalid travel date format';
+    }
+}
+if (!empty($guests) && (!is_numeric($guests) || $guests < 1 || $guests > 50)) {
+    $errors[] = 'Invalid number of guests';
+}
+if (!empty($message) && !validateInput($message, 'text', 1000)) {
+    $errors[] = 'Invalid message content';
+}
+
+if (!empty($errors)) {
+    echo json_encode(['success' => false, 'error' => 'Validation failed: ' . implode(', ', $errors)]);
     exit;
 }
 
@@ -185,7 +339,7 @@ $emailHtml = "
 </body>
 </html>";
 
-$result = sendEmailResend($adminEmail, 'New Booking - India Day Trip', $emailHtml);
+$result = sendEmailSMTP($adminEmail, 'New Booking - India Day Trip', $emailHtml);
 
 if ($result['success']) {
     $confirmationHtml = "
@@ -204,7 +358,7 @@ if ($result['success']) {
     </body>
     </html>";
     
-    sendEmailResend($email, 'Booking Received - India Day Trip', $confirmationHtml);
+    sendEmailSMTP($email, 'Booking Received - India Day Trip', $confirmationHtml);
     
     echo json_encode(['success' => true, 'message' => 'Booking submitted successfully']);
 } else {

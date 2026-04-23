@@ -143,6 +143,12 @@ if (!isset($tour)) {
             margin-bottom: 15px;
         }
 
+        .tour-highlight div {
+            font-size: 1.2rem !important;
+            line-height: 1.7;
+            color: #333;
+        }
+
         /* Gallery Section */
         .tour-gallery-single img,
         .tour-gallery-two img,
@@ -289,7 +295,7 @@ if (!isset($tour)) {
             flex-shrink: 0;
             width: 60px;
             height: 60px;
-            background: linear-gradient(45deg, #1CA8CB, #113D48);
+            background: #0c2d62;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -590,6 +596,12 @@ if (!isset($tour)) {
             font-weight: 600;
         }
 
+        .tour-highlight div {
+            font-size: 1.2rem !important;
+            line-height: 1.7;
+            color: #333;
+        }
+
         /* Enhanced Gallery */
         .tour-gallery img {
             width: 100%;
@@ -630,14 +642,14 @@ if (!isset($tour)) {
             flex-shrink: 0;
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #1CA8CB, #113D48);
+            background: #0c2d62;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 20px;
-            box-shadow: 0 3px 10px rgba(28, 168, 203, 0.25);
+            box-shadow: 0 3px 10px rgba(12, 45, 98, 0.25);
         }
 
         .highlight-content h4 {
@@ -1262,6 +1274,10 @@ if (!isset($tour)) {
         .booking-form-sidebar textarea.form-control {
             padding-top: 14px;
         }
+        .tour-overview {
+            font-size: large;
+            line-height: 1.6;
+        }
     </style>
 </head>
 
@@ -1348,6 +1364,14 @@ else {
                                             <?php echo $tour['reviews'] ?? '0'; ?> reviews)
                                         </span>
                                     </div>
+                                    <?php if (!empty($tour['pricing'])): ?>
+                                    <div class="hero-meta-item">
+                                        <i class="fas fa-tag"></i>
+                                        <span>
+                                            <?php echo '₹' . number_format($tour['pricing'], 2); ?>
+                                        </span>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
 
                             </div>
@@ -1356,32 +1380,28 @@ else {
                         <!-- Overview -->
                         <div class="mb-5 pb-3 border-top pt-5 border-bottom">
                             <h2 class="sec-title ">Tour Overview</h2>
-                            <div><?php echo $tour['description']; ?></div>
+                            <div class="tour-overview"><?php echo $tour['description']; ?></div>
 
                         </div>
 
                         <!-- Highlights -->
                         <div class="mb-5 pb-3 border-bottom">
                             <h2 class="sec-title mb-5">Tour Highlights</h2>
-                            <div class="row">
-                                <?php
+                            <?php
 $highlights = json_decode($tour['highlights'] ?? '[]', true) ?: [];
 $icons = ['fas fa-sun', 'fas fa-utensils', 'fas fa-landmark', 'fas fa-user-shield', 'fas fa-camera', 'fas fa-hotel'];
 foreach ($highlights as $index => $highlight) {
     $icon = $icons[$index % count($icons)];
-    echo '<div class="col-md-6">
-                                        <div class="highlight-row">
-                                            <div class="highlight-icon">
-                                                <i class="' . $icon . '"></i>
-                                            </div>
-                                            <div class="highlight-content">
-                                                <h4 class="box-title">' . htmlspecialchars($highlight['title'] ?? $highlight) . '</h4>
-                                            </div>
+    echo '<div class="highlight-row mb-3">
+                                        <div class="highlight-icon">
+                                            <i class="' . $icon . '"></i>
+                                        </div>
+                                        <div class="highlight-content">
+                                            <h4 class="box-title">' . htmlspecialchars($highlight['title'] ?? $highlight) . '</h4>
                                         </div>
                                     </div>';
 }
 ?>
-                            </div>
                         </div>
 
                         <!-- Inclusions/Exclusions -->

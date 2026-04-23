@@ -5,22 +5,23 @@ RewriteRule .* - [E=verifycaptcha:drop]
 ### HOSTINGER LITESHIELD RECAPTCHA, DO NOT REMOVE THIS LINE ###
 RewriteEngine On
 
-# EMERGENCY DDoS PROTECTION
-# Block suspicious user agents
+# EMERGENCY DDoS PROTECTION - Enhanced
+# Block suspicious user agents and known bots
 RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
 RewriteCond %{HTTP_USER_AGENT} ^-?$ [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]get [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Bb]andit [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Bb]ot [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Rr]obot [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Cc]rawler [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Ss]canner [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^[Ww]eb[Ss]pyder [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^curl [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^wget [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^python [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^scrapy [NC]
+RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|scraper|wget|curl|python|scrapy|java|perl|ruby|go-http) [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} (bingbot|googlebot|facebookexternalhit|meta-externalagent|slurp|msnbot|teoma|yandex) [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} (aiohttp|python-requests|httpclient|okhttp|libwww|lwp|mechanize) [NC]
 RewriteRule ^api/ - [F,L]
+
+# Block specific malicious IPs from your logs
+RewriteCond %{REMOTE_ADDR} ^(191\.96\.168\.95|157\.55\.39\.) [NC]
+RewriteRule ^api/ - [F,L]
+
+# Block malformed nested URL patterns
+RewriteCond %{REQUEST_URI} (blog/.*/blog/.*/gallery/.*/blog/.*) [NC,OR]
+RewriteCond %{REQUEST_URI} (sitemap-html/.*/assets/.*/assets/.*) [NC]
+RewriteRule .* - [F,L]
 
 # Block requests without proper headers for API
 RewriteCond %{REQUEST_URI} ^/api/

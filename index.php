@@ -7,6 +7,9 @@ $sameDayTours = getTours('Same Day Tours', 4);
 $tajMahalTours = getTours('Taj Mahal Tours', 4);
 $goldenTriangleTours = getTours('Golden Triangle Tours', 8);
 
+// Get latest blogs for homepage
+$latestBlogs = getBlogs(null, 3, 'published');
+
 // Handle routing for detail pages
 $type = $_GET['type'] ?? null;
 $slug = $_GET['slug'] ?? null;
@@ -1042,104 +1045,39 @@ endforeach; ?>
                 </div>
             </div>
             <div class="row gx-24 gy-30">
-                <div class="col-xl-8">
-                    <?php if (isset($latestBlogs[0])): ?>
-                        <div class="blog-grid2 style2 th-ani">
-                            <div class="blog-img global-img"><img
-                                    src="assets/img/blog/<?php echo $latestBlogs[0]['featured_image'] ?: 'blog-tour.webp'; ?>"
-                                    alt="<?php echo htmlspecialchars($latestBlogs[0]['title']); ?>"></div>
-                            <div class="blog-grid2_content">
-                                <div class="blog-meta">
-                                    <span><?php echo date('M d, Y', strtotime($latestBlogs[0]['publication_date'])); ?></span>
-                                    <span><?php $wordCount = str_word_count(strip_tags($latestBlogs[0]['content']));
+                <?php for ($i = 0; $i < 3; $i++): ?>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <?php if (isset($latestBlogs[$i])): ?>
+                            <div class="blog-grid2 th-ani">
+                                <div class="blog-img global-img"><img
+                                        src="assets/img/blog/<?php echo $latestBlogs[$i]['featured_image'] ?: 'blog-tour.webp'; ?>"
+                                        alt="<?php echo htmlspecialchars($latestBlogs[$i]['title']); ?>"></div>
+                                <div class="blog-grid2_content">
+                                    <div class="blog-meta">
+                                        <span><?php echo date('M d, Y', strtotime($latestBlogs[$i]['publication_date'])); ?></span>
+                                        <span><?php $wordCount = str_word_count(strip_tags($latestBlogs[$i]['content']));
     echo ceil($wordCount / 200); ?>
-                                        min read</span>
+                                            min read</span>
+                                    </div>
+                                    <h3 class="box-title"><a
+                                            href="blog/<?php echo $latestBlogs[$i]['slug']; ?>"><?php echo htmlspecialchars($latestBlogs[$i]['title']); ?></a>
+                                    </h3><a href="blog/<?php echo $latestBlogs[$i]['slug']; ?>"
+                                        class="th-btn style4 th-icon">Read
+                                        More</a>
                                 </div>
-                                <h3 class="box-title"><a
-                                        href="?type=blog&slug=<?php echo $latestBlogs[0]['slug']; ?>"><?php echo htmlspecialchars($latestBlogs[0]['title']); ?></a>
-                                </h3><a href="?type=blog&slug=<?php echo $latestBlogs[0]['slug']; ?>"
-                                    class="th-btn style4 th-icon">Read
-                                    More</a>
                             </div>
-                        </div>
-                    <?php
-else: ?>
-                        <div class="blog-grid2 style2 th-ani">
-                            <div class="blog-img global-img"><img src="assets/img/blog/blog-tour.webp" alt="No blog yet">
-                            </div>
-                            <div class="blog-grid2_content">
-                                <div class="blog-meta"><span>No blog yet</span></div>
-                                <h3 class="box-title">No blog yet</h3>
-                            </div>
-                        </div>
-                    <?php
-endif; ?>
-                    <?php if (isset($latestBlogs[1])): ?>
-                        <div class="blog-grid2 th-ani style2 mt-24">
-                            <div class="blog-img global-img"><img
-                                    src="assets/img/blog/<?php echo $latestBlogs[1]['featured_image'] ?: 'blog-tour.webp'; ?>"
-                                    alt="<?php echo htmlspecialchars($latestBlogs[1]['title']); ?>"></div>
-                            <div class="blog-grid2_content">
-                                <div class="blog-meta">
-                                    <span><?php echo date('M d, Y', strtotime($latestBlogs[1]['publication_date'])); ?></span>
-                                    <span><?php $wordCount = str_word_count(strip_tags($latestBlogs[1]['content']));
-    echo ceil($wordCount / 200); ?>
-                                        min read</span>
+                        <?php else: ?>
+                            <div class="blog-grid2 th-ani">
+                                <div class="blog-img global-img"><img src="assets/img/blog/blog-tour.webp" alt="No blog yet">
                                 </div>
-                                <h3 class="box-title"><a
-                                        href="?type=blog&slug=<?php echo $latestBlogs[1]['slug']; ?>"><?php echo htmlspecialchars($latestBlogs[1]['title']); ?></a>
-                                </h3><a href="?type=blog&slug=<?php echo $latestBlogs[1]['slug']; ?>"
-                                    class="th-btn style4 th-icon">Read
-                                    More</a>
-                            </div>
-                        </div>
-                    <?php
-else: ?>
-                        <div class="blog-grid2 th-ani style2 mt-24">
-                            <div class="blog-img global-img"><img src="assets/img/blog/blog-tour.webp" alt="No blog yet">
-                            </div>
-                            <div class="blog-grid2_content">
-                                <div class="blog-meta"><span>No blog yet</span></div>
-                                <h3 class="box-title">No blog yet</h3>
-                            </div>
-                        </div>
-                    <?php
-endif; ?>
-                </div>
-                <div class="col-xl-4">
-                    <?php if (isset($latestBlogs[2])): ?>
-                        <div class="blog-grid2 th-ani">
-                            <div class="blog-img global-img"><img
-                                    src="assets/img/blog/<?php echo $latestBlogs[2]['featured_image'] ?: 'blog-tour.webp'; ?>"
-                                    alt="<?php echo htmlspecialchars($latestBlogs[2]['title']); ?>"></div>
-                            <div class="blog-grid2_content">
-                                <div class="blog-meta">
-                                    <span><?php echo date('M d, Y', strtotime($latestBlogs[2]['publication_date'])); ?></span>
-                                    <span><?php $wordCount = str_word_count(strip_tags($latestBlogs[2]['content']));
-    echo ceil($wordCount / 200); ?>
-                                        min read</span>
+                                <div class="blog-grid2_content">
+                                    <div class="blog-meta"><span>No blog yet</span></div>
+                                    <h3 class="box-title">No blog yet</h3>
                                 </div>
-                                <h3 class="box-title">
-                                    <a
-                                        href="?type=blog&slug=<?php echo $latestBlogs[2]['slug']; ?>"><?php echo htmlspecialchars($latestBlogs[2]['title']); ?></a>
-                                </h3><a href="?type=blog&slug=<?php echo $latestBlogs[2]['slug']; ?>"
-                                    class="th-btn style4 th-icon">Read
-                                    More</a>
                             </div>
-                        </div>
-                    <?php
-else: ?>
-                        <div class="blog-grid2 th-ani">
-                            <div class="blog-img global-img"><img src="assets/img/blog/blog-tour.webp" alt="No blog yet">
-                            </div>
-                            <div class="blog-grid2_content">
-                                <div class="blog-meta"><span>No blog yet</span></div>
-                                <h3 class="box-title">No blog yet</h3>
-                            </div>
-                        </div>
-                    <?php
-endif; ?>
-                </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endfor; ?>
             </div>
         </div>
     </section>
