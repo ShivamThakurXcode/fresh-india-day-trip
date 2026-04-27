@@ -220,4 +220,53 @@ try {
 } catch (Exception $e) {
     echo "Error creating page_seo table: " . $e->getMessage() . "\n";
 }
+
+// Create bookings table
+try {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS bookings (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) DEFAULT NULL,
+        tour_type VARCHAR(100) DEFAULT NULL,
+        travel_date DATE DEFAULT NULL,
+        adults INT DEFAULT NULL,
+        children INT DEFAULT 0,
+        special_requests TEXT DEFAULT NULL,
+        tour_name VARCHAR(255) DEFAULT NULL,
+        status ENUM('pending','read','processed','completed') DEFAULT 'pending',
+        ip_address VARCHAR(45) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_status (status),
+        INDEX idx_created_at (created_at),
+        INDEX idx_email (email)
+    )");
+    echo "Created bookings table.\n";
+} catch (Exception $e) {
+    echo "Error creating bookings table: " . $e->getMessage() . "\n";
+}
+
+// Create contact_inquiries table
+try {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS contact_inquiries (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) DEFAULT NULL,
+        subject VARCHAR(255) NOT NULL,
+        message TEXT NOT NULL,
+        status ENUM('pending','read','processed','completed') DEFAULT 'pending',
+        ip_address VARCHAR(45) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_status (status),
+        INDEX idx_created_at (created_at),
+        INDEX idx_email (email)
+    )");
+    echo "Created contact_inquiries table.\n";
+} catch (Exception $e) {
+    echo "Error creating contact_inquiries table: " . $e->getMessage() . "\n";
+}
 ?>
