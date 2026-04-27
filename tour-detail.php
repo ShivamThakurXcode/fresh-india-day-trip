@@ -1367,8 +1367,8 @@ else {
                                     <?php if (!empty($tour['pricing'])): ?>
                                     <div class="hero-meta-item">
                                         <i class="fas fa-tag"></i>
-                                        <span>
-                                            <?php echo '₹' . number_format($tour['pricing'], 2); ?>
+                                        <span style="font-weight: bold; font-size: 1.2em; color: #1CA8CB;">
+                                            ₹<?php echo number_format($tour['pricing'], 2); ?>
                                         </span>
                                     </div>
                                     <?php endif; ?>
@@ -1406,7 +1406,7 @@ foreach ($highlights as $index => $highlight) {
 
                         <!-- Inclusions/Exclusions -->
                         <div class="mb-5 pb-3 border-bottom">
-                            <h2 class="sec-title mb-5">Inclusion Or Exclusion</h2>
+                            <h3 class="sec-title mb-5">Inclusion Or Exclusion</h3>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5 class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>
@@ -1439,7 +1439,7 @@ foreach ($excluded as $item) {
 
                         <!-- Itinerary -->
                         <div class="mb-5 pb-3 border-bottom">
-                            <h2 class="sec-title mb-5">Tour Itinerary</h2>
+                            <h3 class="sec-title mb-5">Tour Itinerary</h3>
 
                             <?php
 $itinerary = json_decode($tour['itinerary'] ?? '[]', true) ?: [];
@@ -1622,7 +1622,11 @@ foreach ($itinerary as $index => $day) {
                     
                     fetch('/api/mail.php', {
                         method: 'POST',
-                        body: formData
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
                     })
                     .then(response => response.text())
                     .then(data => {
