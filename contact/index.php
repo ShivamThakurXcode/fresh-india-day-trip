@@ -314,31 +314,25 @@ $phone_href = preg_replace('/[^0-9+]/', '', $contact_mobile);
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
                     submitBtn.innerHTML = originalBtnText;
                     submitBtn.disabled = false;
 
-                    if (data.includes('Thank you') || data.includes('confirmation') || data.includes('Confirmation') || data.includes('success')) {
+                    if (data.success) {
                         // Show success
                         if (formMessages) {
                             formMessages.className = 'form-messages mt-3 text-success';
-                            formMessages.textContent = data;
+                            formMessages.textContent = data.message || 'Message sent successfully!';
                         }
                         form.reset();
                         // Regenerate CAPTCHA after form reset
                         location.reload();
-                    } else if (data.includes('error') || data.includes('Error') || data.includes('Sorry')) {
+                    } else {
                         // Show error
                         if (formMessages) {
                             formMessages.className = 'form-messages mt-3 text-danger';
-                            formMessages.textContent = data;
-                        }
-                    } else {
-                        // Unknown response - show as error
-                        if (formMessages) {
-                            formMessages.className = 'form-messages mt-3 text-danger';
-                            formMessages.textContent = data;
+                            formMessages.textContent = data.error || 'Error sending message. Please try again.';
                         }
                     }
                 })

@@ -1628,27 +1628,22 @@ foreach ($itinerary as $index => $day) {
                             'X-Requested-With': 'XMLHttpRequest'
                         }
                     })
-                    .then(response => response.text())
+                    .then(response => response.json())
                     .then(data => {
                         submitBtn.innerHTML = originalBtnText;
                         submitBtn.disabled = false;
-                        
-                        if (data.includes('Thank you') || data.includes('confirmation') || data.includes('Confirmation') || data.includes('success')) {
+
+                        if (data.success) {
                             if (formMessages) {
                                 formMessages.className = 'form-messages mb-0 mt-2 text-center text-success';
-                                formMessages.textContent = data;
+                                formMessages.textContent = data.message || 'Booking submitted successfully!';
                             }
                             bookingForm.reset();
                             location.reload();
-                        } else if (data.includes('error') || data.includes('Error') || data.includes('Sorry')) {
-                            if (formMessages) {
-                                formMessages.className = 'form-messages mb-0 mt-2 text-center text-danger';
-                                formMessages.textContent = data;
-                            }
                         } else {
                             if (formMessages) {
                                 formMessages.className = 'form-messages mb-0 mt-2 text-center text-danger';
-                                formMessages.textContent = data;
+                                formMessages.textContent = data.error || 'Error submitting booking. Please try again.';
                             }
                         }
                     })

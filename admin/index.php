@@ -15,8 +15,16 @@ $total_tour_views = $stmt->fetchColumn() ?: 0;
 $stmt = $pdo->query("SELECT SUM(view_count) FROM blogs");
 $total_blog_views = $stmt->fetchColumn() ?: 0;
 
+// Inquiry statistics
+$pending_bookings = $pdo->query("SELECT COUNT(*) FROM bookings WHERE status = 'pending'")->fetchColumn();
+$pending_contacts = $pdo->query("SELECT COUNT(*) FROM contact_inquiries WHERE status = 'pending'")->fetchColumn();
+$total_bookings = $pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
+$total_contacts = $pdo->query("SELECT COUNT(*) FROM contact_inquiries")->fetchColumn();
+
 $recent_tours = $pdo->query("SELECT title, created_at FROM tours ORDER BY created_at DESC LIMIT 5")->fetchAll();
 $recent_blogs = $pdo->query("SELECT title, created_at FROM blogs ORDER BY created_at DESC LIMIT 5")->fetchAll();
+$recent_bookings = $pdo->query("SELECT first_name, last_name, email, created_at FROM bookings ORDER BY created_at DESC LIMIT 5")->fetchAll();
+$recent_contacts = $pdo->query("SELECT name, email, subject, created_at FROM contact_inquiries ORDER BY created_at DESC LIMIT 5")->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -128,6 +136,24 @@ $recent_blogs = $pdo->query("SELECT title, created_at FROM blogs ORDER BY create
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Bookings</h5>
+                                <h3><?php echo $total_bookings; ?></h3>
+                                <small class="text-muted"><?php echo $pending_bookings; ?> pending</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Contacts</h5>
+                                <h3><?php echo $total_contacts; ?></h3>
+                                <small class="text-muted"><?php echo $pending_contacts; ?> pending</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-md-6">
@@ -149,6 +175,40 @@ $recent_blogs = $pdo->query("SELECT title, created_at FROM blogs ORDER BY create
                                 <ul class="list-group list-group-flush">
                                     <?php foreach ($recent_blogs as $blog): ?>
                                         <li class="list-group-item"><?php echo htmlspecialchars($blog['title']); ?> <small class="text-muted"><?php echo $blog['created_at']; ?></small></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Recent Bookings</div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <?php foreach ($recent_bookings as $booking): ?>
+                                        <li class="list-group-item">
+                                            <?php echo htmlspecialchars($booking['first_name'] . ' ' . $booking['last_name']); ?>
+                                            <small class="text-muted"><?php echo htmlspecialchars($booking['email']); ?></small>
+                                            <br><small class="text-muted"><?php echo $booking['created_at']; ?></small>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Recent Contacts</div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <?php foreach ($recent_contacts as $contact): ?>
+                                        <li class="list-group-item">
+                                            <?php echo htmlspecialchars($contact['name']); ?>
+                                            <small class="text-muted"><?php echo htmlspecialchars($contact['subject']); ?></small>
+                                            <br><small class="text-muted"><?php echo $contact['created_at']; ?></small>
+                                        </li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>

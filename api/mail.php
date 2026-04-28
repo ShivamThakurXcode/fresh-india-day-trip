@@ -1,4 +1,9 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', '../php_errors.log');
+
 require_once '../config.php';
 
 session_start();
@@ -8,19 +13,6 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
-
-// CSRF Token Generation
-function generateCSRFToken() {
-    if (!isset($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf_token'];
-}
-
-// CSRF Token Verification
-function verifyCSRFToken($token) {
-    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-}
 
 // Load .env file
 $envFile = '../.env';
@@ -91,13 +83,13 @@ function blockBots() {
         exit('Method not allowed');
     }
     
-    // Block common bot user agents
+    // Block common bot user agents (relaxed - removed 'fetch' and 'axios' which are used by legitimate JS)
     $botPatterns = [
         'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'python', 
         'scrapy', 'java', 'perl', 'ruby', 'go-http', 'aiohttp', 'python-requests',
         'bingbot', 'googlebot', 'facebookexternalhit', 'meta-externalagent',
         'slurp', 'msnbot', 'teoma', 'yandex', 'httpclient', 'okhttp',
-        'postman', 'insomnia', 'httpie', 'axios', 'fetch'
+        'postman', 'insomnia', 'httpie'
     ];
     
     foreach ($botPatterns as $pattern) {
@@ -107,14 +99,8 @@ function blockBots() {
         }
     }
     
-    // Block requests without proper browser headers
-    if (empty($userAgent) || empty($accept)) {
-        http_response_code(403);
-        exit('Access denied');
-    }
-    
-    // Validate Accept header - should contain text/html or application/json
-    if (!preg_match('/text\/html|application\/json/i', $accept)) {
+    // Only block if completely empty user agent (relaxed - allow empty accept header)
+    if (empty($userAgent)) {
         http_response_code(403);
         exit('Access denied');
     }
@@ -139,46 +125,6 @@ blockBots();
 
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 checkRateLimit($ip);
-
-// Import PHPMailer
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-// Load PHPMailer
-require_once '../PHPMailer/PHPMailer-6.8.0/src/PHPMailer.php';
-require_once '../PHPMailer/PHPMailer-6.8.0/src/SMTP.php';
-require_once '../PHPMailer/PHPMailer-6.8.0/src/Exception.php';
-
-function sendEmailSMTP($to, $subject, $html) {
-    $mail = new PHPMailer(true);
-    
-    try {
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $_ENV['SMTP_EMAIL'] ?? 'indiadaytrip@gmail.com';
-        $mail->Password   = $_ENV['SMTP_PASSWORD'] ?? 'your_app_password';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
-        
-        // Recipients
-        $mail->setFrom($_ENV['SMTP_EMAIL'] ?? 'indiadaytrip@gmail.com', 'India Day Trip');
-        $mail->addAddress($to);
-        
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $html;
-        
-        $mail->send();
-        return ['success' => true, 'message' => 'Email sent successfully'];
-        
-    } catch (Exception $e) {
-        return ['success' => false, 'error' => $mail->ErrorInfo];
-    }
-}
 
 // POST method is already enforced in blockBots() function
 
@@ -262,15 +208,26 @@ $tourName = $_POST['tour_name'] ?? '';
 $travelDate = $_POST['travel_date'] ?? '';
 $guests = $_POST['guests'] ?? '';
 $message = $_POST['message'] ?? '';
+$subject = $_POST['subject'] ?? '';
 
 // Validate required fields
 $errors = [];
-if (!validateInput($firstName, 'name')) {
-    $errors[] = 'Invalid first name';
+if ($formType === 'contact') {
+    // Contact form uses single name field
+    $fullName = $_POST['name'] ?? '';
+    if (!validateInput($fullName, 'name')) {
+        $errors[] = 'Invalid name';
+    }
+} else {
+    // Booking form uses first_name and last_name
+    if (!validateInput($firstName, 'name')) {
+        $errors[] = 'Invalid first name';
+    }
+    if (!validateInput($lastName, 'name')) {
+        $errors[] = 'Invalid last name';
+    }
 }
-if (!validateInput($lastName, 'name')) {
-    $errors[] = 'Invalid last name';
-}
+
 if (!validateInput($email, 'email')) {
     $errors[] = 'Invalid email address';
 }
@@ -294,73 +251,38 @@ if (!empty($guests) && (!is_numeric($guests) || $guests < 1 || $guests > 50)) {
 if (!empty($message) && !validateInput($message, 'text', 1000)) {
     $errors[] = 'Invalid message content';
 }
+if (!empty($subject) && !validateInput($subject, 'text', 255)) {
+    $errors[] = 'Invalid subject';
+}
 
 if (!empty($errors)) {
     echo json_encode(['success' => false, 'error' => 'Validation failed: ' . implode(', ', $errors)]);
     exit;
 }
 
-$adminEmail = defined('ADMIN_EMAIL') ? ADMIN_EMAIL : 'indiadaytrip@gmail.com';
-
-$emailHtml = "
-<html>
-<body style='font-family: Arial, sans-serif; padding: 20px;'>
-    <h2 style='color: #113D48;'>New Booking Request</h2>
-    <table style='border-collapse: collapse; width: 100%; max-width: 600px;'>
-        <tr style='background: #f5f5f5;'>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold;'>Name</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'>" . htmlspecialchars($firstName . ' ' . $lastName) . "</td>
-        </tr>
-        <tr>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold;'>Email</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'><a href='mailto:" . htmlspecialchars($email) . "'>" . htmlspecialchars($email) . "</a></td>
-        </tr>
-        <tr style='background: #f5f5f5;'>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold;'>Phone</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'>" . htmlspecialchars($phone ?: 'Not provided') . "</td>
-        </tr>
-        <tr>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold;'>Tour</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'>" . htmlspecialchars($tourName ?: 'Not specified') . "</td>
-        </tr>
-        <tr style='background: #f5f5f5;'>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold;'>Travel Date</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'>" . htmlspecialchars($travelDate ?: 'Not specified') . "</td>
-        </tr>
-        <tr>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold;'>Guests</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'>" . htmlspecialchars($guests ?: 'Not specified') . "</td>
-        </tr>
-        <tr style='background: #f5f5f5;'>
-            <td style='padding: 10px; border: 1px solid #ddd; font-weight: bold; vertical-align: top;'>Message</td>
-            <td style='padding: 10px; border: 1px solid #ddd;'>" . nl2br(htmlspecialchars($message ?: 'No message')) . "</td>
-        </tr>
-    </table>
-</body>
-</html>";
-
-$result = sendEmailSMTP($adminEmail, 'New Booking - India Day Trip', $emailHtml);
-
-if ($result['success']) {
-    $confirmationHtml = "
-    <html>
-    <body style='font-family: Arial, sans-serif; padding: 20px;'>
-        <h2 style='color: #113D48;'>Thank You for Your Booking Request!</h2>
-        <p>Dear " . htmlspecialchars($firstName) . ",</p>
-        <p>We have received your booking request. Our team will contact you within 24 hours.</p>
-        <p><strong>Your Details:</strong></p>
-        <ul>
-            <li>Tour: " . htmlspecialchars($tourName ?: 'Not specified') . "</li>
-            <li>Travel Date: " . htmlspecialchars($travelDate ?: 'Not specified') . "</li>
-            <li>Guests: " . htmlspecialchars($guests ?: 'Not specified') . "</li>
-        </ul>
-        <p>Best regards,<br>India Day Trip Team</p>
-    </body>
-    </html>";
+try {
+    if ($formType === 'contact') {
+        // Store contact inquiry
+        $stmt = $pdo->prepare("INSERT INTO contact_inquiries (name, email, phone, subject, message, ip_address) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$fullName, $email, $phone, $subject, $message, $ip]);
+    } else {
+        // Store booking inquiry
+        // Parse guests into adults and children if needed
+        $adults = !empty($guests) ? (int)$guests : null;
+        $children = 0;
+        
+        // Format travel date to YYYY-MM-DD if in DD/MM/YYYY format
+        if (!empty($travelDate) && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $travelDate)) {
+            $parts = explode('/', $travelDate);
+            $travelDate = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+        }
+        
+        $stmt = $pdo->prepare("INSERT INTO bookings (first_name, last_name, email, phone, tour_name, travel_date, adults, children, special_requests, ip_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$firstName, $lastName, $email, $phone, $tourName, $travelDate, $adults, $children, $message, $ip]);
+    }
     
-    sendEmailSMTP($email, 'Booking Received - India Day Trip', $confirmationHtml);
-    
-    echo json_encode(['success' => true, 'message' => 'Booking submitted successfully']);
-} else {
-    echo json_encode(['success' => false, 'error' => $result['error']]);
+    echo json_encode(['success' => true, 'message' => 'Form submitted successfully']);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'error' => 'Database error: ' . $e->getMessage()]);
 }
+?>

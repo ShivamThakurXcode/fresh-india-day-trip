@@ -32,6 +32,18 @@
             </a>
         </li>
         <li class="menu-item">
+            <a href="bookings.php" class="menu-link">
+                <i class="fas fa-calendar-check menu-icon"></i>
+                <span class="menu-text">Booking Inquiries</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="contact-inquiries.php" class="menu-link">
+                <i class="fas fa-envelope menu-icon"></i>
+                <span class="menu-text">Contact Inquiries</span>
+            </a>
+        </li>
+        <li class="menu-item">
             <a href="seo.php" class="menu-link">
                 <i class="fas fa-search menu-icon"></i>
                 <span class="menu-text">SEO Management</span>
@@ -88,7 +100,7 @@
 }
 
 .sidebar-logo {
-    width: 80%;
+    width: 35%;
     height: auto;
     margin-bottom: 15px;
 }
