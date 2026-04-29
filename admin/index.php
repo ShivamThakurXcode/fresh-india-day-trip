@@ -74,6 +74,53 @@ $recent_contacts = $pdo->query("SELECT name, email, subject, created_at FROM con
             margin-bottom: 5px;
         }
 
+        /* Compact Stats Cards */
+        .stats-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 140px;
+            max-width: 200px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #1087c3;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: #0d6eaa;
+        }
+
+        .stat-card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .stat-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .stat-card-sub {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
         @media (max-width: 767px) {
             .tour-area .row.align-items-center {
                 flex-direction: column;
@@ -94,6 +141,20 @@ $recent_contacts = $pdo->query("SELECT name, email, subject, created_at FROM con
             .tour-area .title-area .sec-title {
                 font-size: 24px;
             }
+
+            .stats-container {
+                gap: 8px;
+            }
+
+            .stat-card {
+                min-width: 120px;
+                max-width: 150px;
+                padding: 10px 12px;
+            }
+
+            .stat-card-value {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -103,56 +164,32 @@ $recent_contacts = $pdo->query("SELECT name, email, subject, created_at FROM con
     <div class="main-content">
         <div class="content-wrapper">
             <h2 class="page-title" >Dashboard</h2>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Tours</h5>
-                                <h3><?php echo $total_tours; ?></h3>
-                            </div>
-                        </div>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Tours</div>
+                        <div class="stat-card-value"><?php echo $total_tours; ?></div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Blogs</h5>
-                                <h3><?php echo $total_blogs; ?></h3>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Blogs</div>
+                        <div class="stat-card-value"><?php echo $total_blogs; ?></div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Tour Views</h5>
-                                <h3><?php echo $total_tour_views; ?></h3>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Tour Views</div>
+                        <div class="stat-card-value"><?php echo $total_tour_views; ?></div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Blog Views</h5>
-                                <h3><?php echo $total_blog_views; ?></h3>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Blog Views</div>
+                        <div class="stat-card-value"><?php echo $total_blog_views; ?></div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Bookings</h5>
-                                <h3><?php echo $total_bookings; ?></h3>
-                                <small class="text-muted"><?php echo $pending_bookings; ?> pending</small>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Bookings</div>
+                        <div class="stat-card-value"><?php echo $total_bookings; ?></div>
+                        <div class="stat-card-sub"><?php echo $pending_bookings; ?> pending</div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Contacts</h5>
-                                <h3><?php echo $total_contacts; ?></h3>
-                                <small class="text-muted"><?php echo $pending_contacts; ?> pending</small>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Total Contacts</div>
+                        <div class="stat-card-value"><?php echo $total_contacts; ?></div>
+                        <div class="stat-card-sub"><?php echo $pending_contacts; ?> pending</div>
                     </div>
                 </div>
                 <div class="row mt-4">

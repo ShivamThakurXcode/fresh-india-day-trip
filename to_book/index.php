@@ -107,12 +107,13 @@ if (session_status() === PHP_SESSION_NONE) {
                                     <option value="Custom Tour">Custom Tour</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 form-group position-relative">
+                            <div class="col-md-4 form-group position-relative">
+                                <label class="form-label">Travel Date *</label>
                                 <input type="date" class="form-control form-control-lg" name="travel_date"
                                     id="travel_date" required>
                                 <i class="fa-light fa-calendar input-icon"></i>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-4 form-group">
                                 <label class="form-label">Number of Adults *</label>
                                 <select name="adults" id="adults" class="form-select form-select-lg" required>
                                     <option value="">Select Adults</option>
@@ -126,7 +127,7 @@ if (session_status() === PHP_SESSION_NONE) {
                                     <option value="8">8+ Adults</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-4 form-group">
                                 <label class="form-label">Number of Children</label>
                                 <select name="children" id="children" class="form-select form-select-lg">
                                     <option value="0">No Children</option>

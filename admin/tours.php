@@ -5,13 +5,83 @@ require_once '../config.php';
 checkAdminLogin();
 
  $message = '';
- 
- if (isset($_SESSION['message'])) {
-     $message = $_SESSION['message'];
-     unset($_SESSION['message']);
- }
- 
- if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
+
+// Handle AJAX image upload
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'upload_cropped_image') {
+    header('Content-Type: application/json');
+    
+    try {
+        if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
+            throw new Exception('Security validation failed.');
+        }
+
+        $imageData = $_POST['image_data'] ?? '';
+        if (empty($imageData)) {
+            throw new Exception('No image data received.');
+        }
+
+        // Extract base64 data
+        if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $matches)) {
+            $imageData = substr($imageData, strpos($imageData, ',') + 1);
+            $extension = $matches[1];
+        } else {
+            throw new Exception('Invalid image data format.');
+        }
+
+        // Validate extension
+        $allowedExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+        if (!in_array(strtolower($extension), $allowedExtensions)) {
+            throw new Exception('Invalid image type.');
+        }
+
+        // Decode base64
+        $decodedImage = base64_decode($imageData);
+        if ($decodedImage === false) {
+            throw new Exception('Failed to decode image.');
+        }
+
+        // Validate image size (max 5MB)
+        if (strlen($decodedImage) > 5 * 1024 * 1024) {
+            throw new Exception('Image size exceeds 5MB limit.');
+        }
+
+        // Create upload directory if not exists
+        $uploadDir = "../assets/img/tours-image/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        // Generate unique filename
+        $filename = time() . '_' . uniqid() . '.' . $extension;
+        $targetPath = $uploadDir . $filename;
+
+        // Save the file
+        if (file_put_contents($targetPath, $decodedImage) === false) {
+            throw new Exception('Failed to save image file.');
+        }
+
+        echo json_encode([
+            'success' => true,
+            'filename' => $filename,
+            'message' => 'Image uploaded successfully.'
+        ]);
+
+    } catch (Exception $e) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!isset($_POST['action']) || $_POST['action'] != 'upload_cropped_image')) {
     try {
         // SECURITY: Verify CSRF token
         if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
@@ -42,10 +112,21 @@ checkAdminLogin();
             $slug = generateSlug($title, 'tours', $id);
         }
 
+        // Handle current images (filenames only, no data URLs)
         $images = [];
         if (!empty($_POST['current_images'])) {
-            $images = json_decode($_POST['current_images'], true) ?: [];
+            $decodedImages = json_decode($_POST['current_images'], true);
+            if (is_array($decodedImages)) {
+                foreach ($decodedImages as $img) {
+                    // Only accept filenames, reject data URLs
+                    if (!empty($img) && !preg_match('/^data:/', $img)) {
+                        $images[] = sanitizeFilename($img);
+                    }
+                }
+            }
         }
+
+        // Handle newly uploaded files via standard file input
         if (!empty($_FILES['images']['name'][0])) {
             $upload_dir = "../assets/img/tours-image/";
             if (!is_dir($upload_dir)) {
@@ -72,7 +153,7 @@ checkAdminLogin();
                 $target = $upload_dir . $filename;
                 
                 if (move_uploaded_file($tmp_name, $target)) {
-                    $images[] = "tours-image/" . $filename;
+                    $images[] = $filename;
                 } else {
                     error_log("Failed to move uploaded file: " . $filename . " to " . $target);
                 }
@@ -167,6 +248,29 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     try {
         if (!verifyCSRFToken($_GET['csrf_token'] ?? '')) {
             throw new Exception('Security validation failed. Please try again.');
+        }
+
+        // Get tour images before deletion to clean up files
+        $stmt = $pdo->prepare("SELECT images FROM tours WHERE id = ?");
+        $stmt->execute([$_GET['id']]);
+        $tour = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($tour) {
+            $images = json_decode($tour['images'], true) ?: [];
+            foreach ($images as $image) {
+                // Security: Validate path
+                $image = str_replace('..', '', $image);
+                $image = ltrim($image, '/\\');
+                // Handle both old format (with directory prefix) and new format (just filename)
+                if (strpos($image, 'tours-image/') === 0 || strpos($image, 'tours-image\\') === 0) {
+                    $filePath = '../assets/img/' . $image;
+                } else {
+                    $filePath = '../assets/img/tours-image/' . $image;
+                }
+                if (file_exists($filePath)) {
+                    @unlink($filePath);
+                }
+            }
         }
 
         $stmt = $pdo->prepare("DELETE FROM tours WHERE id = ?");
@@ -386,6 +490,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
         .itinerary-point .btn {
             margin-left: 10px;
         }
+        
+        /* Loading overlay for image upload */
+        .upload-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -431,10 +549,30 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                 <td>{$truncatedLocation}</td>
                                 <td>";
                             $images = json_decode($row['images'], true);
-                            if ($images && is_array($images)) {
-                                foreach ($images as $img) {
-                                    echo "<img src='../assets/img/{$img}' width='50' height='50' style='margin-right:5px; border-radius:5px;'>";
+                            if ($images && is_array($images) && count($images) > 0) {
+                                // Show only first image with badge
+                                $firstImg = $images[0];
+                                // Handle both old format (with directory prefix) and new format (just filename)
+                                if (strpos($firstImg, 'tours-image/') === 0 || strpos($firstImg, 'tours-image\\') === 0) {
+                                    $imgPath = '../assets/img/' . $firstImg;
+                                } else {
+                                    $imgPath = '../assets/img/tours-image/' . $firstImg;
                                 }
+                                
+                                // Always show count badge
+                                $count = count($images);
+                                if ($count >= 20) {
+                                    $badge = '20+';
+                                } elseif ($count >= 10) {
+                                    $badge = '10+';
+                                } else {
+                                    $badge = $count;
+                                }
+                                
+                                echo "<div style='display:inline-block; position:relative;'>";
+                                echo "<img src='{$imgPath}' width='50' height='50' style='border-radius:5px;'>";
+                                echo "<span class='badge badge-info' style='position:absolute; top:-5px; right:-5px; font-size:10px; padding:3px 6px;'>{$badge}</span>";
+                                echo "</div>";
                             } else {
                                 echo 'No images';
                             }
@@ -485,7 +623,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
               <input type="hidden" name="id" id="tourId">
               <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCSRFToken()); ?>">
               <input type="hidden" name="current_images" id="currentImagesInput">
-              <input type="hidden" name="cropped_images" id="croppedImagesInput">
               <input type="hidden" name="highlights" id="highlightsInput">
               <input type="hidden" name="included" id="includedInput">
               <input type="hidden" name="excluded" id="excludedInput">
@@ -713,27 +850,36 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 </div>
 
                 <div class="form-group">
-                  <label>Images (multiple allowed, max 5)</label>
+                  <label>Images <span id="imageCount" class="badge badge-info">0/20</span></label>
+                  <small class="text-muted d-block mb-2">Upload up to 20 images. Supported formats: JPG, PNG, GIF, WEBP (Max 5MB each)</small>
                 <div class="custom-file-upload">
-                  <input type="file" name="images[]" multiple class="form-control-file d-none" id="imageInput" accept="image/*">
-                  <label for="imageInput" class="btn btn-outline-primary btn-block d-flex align-items-center justify-content-center">
+                  <input type="file" name="images[]" multiple class="form-control-file d-none" id="imageInput" accept="image/jpeg,image/png,image/gif,image/webp">
+                  <label for="imageInput" class="btn btn-outline-primary btn-block d-flex align-items-center justify-content-center" style="min-height: 45px;">
                     <i class="fas fa-images mr-2"></i> Choose Images
                   </label>
                 </div>
-                <div id="cropperContainer" style="display: none; margin-top: 10px;">
-                  <img id="cropperImage" style="max-width: 100%; max-height: 400px;">
-                  <div class="mt-2">
-                    <button type="button" class="btn btn-success btn-sm" id="cropBtn">Crop & Add</button>
+                <div id="uploadStatus" class="mt-2"></div>
+                <div id="cropperContainer" style="display: none; margin-top: 15px; border: 1px solid #dee2e6; padding: 15px; border-radius: 8px; background: #f8f9fa;">
+                  <h6 class="mb-3">Crop Image</h6>
+                  <div style="max-height: 400px; overflow: hidden;">
+                    <img id="cropperImage" style="max-width: 100%;">
+                  </div>
+                  <div class="mt-3">
+                    <button type="button" class="btn btn-success btn-sm" id="cropBtn" disabled><i class="fas fa-crop mr-1"></i> Crop & Upload</button>
                     <button type="button" class="btn btn-secondary btn-sm" id="cancelCropBtn">Cancel</button>
+                    <div id="cropLoading" class="ml-2 d-none">
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span class="ml-1">Uploading...</span>
+                    </div>
                   </div>
                 </div>
-                <div id="currentImages"></div>
+                <div id="currentImages" class="mt-3"></div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" onclick="$('#tourModal').modal('hide')">Cancel</button>
-            <button type="submit" form="tourForm" class="btn btn-success">Save Tour</button>
+            <button type="submit" form="tourForm" class="btn btn-success" id="saveTourBtn">Save Tour</button>
           </div>
         </div>
       </div>
@@ -813,7 +959,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 
         // Initialize all arrays to prevent undefined errors
         var currentImages = [];
-        var croppedImages = [];
         var highlights = [];
         var included = [];
         var excluded = [];
@@ -937,6 +1082,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                     try {
                         currentImages = JSON.parse(tour.images || '[]');
                         if (!Array.isArray(currentImages)) currentImages = [];
+                        // Filter out any data URLs that might have been saved previously
+                        currentImages = currentImages.filter(function(img) {
+                            return img && !img.startsWith('data:');
+                        });
                     } catch(e) {
                         currentImages = [];
                         console.warn('Failed to parse images:', e.message);
@@ -949,10 +1098,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                     renderItinerary();
                     renderFaq();
                     
-                    // Reset cropped images
-                    croppedImages = [];
                     $('#currentImagesInput').val(JSON.stringify(currentImages));
-                    $('#croppedImagesInput').val('[]');
                     renderCurrentImages();
 
                     $('#tourModalLabel').text('Edit Tour');
@@ -970,19 +1116,65 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 
         function renderCurrentImages() {
             var html = '';
-            currentImages.forEach(function(img, index) {
-                html += '<div class="d-inline-block mr-2 mb-2 position-relative">';
-                html += '<img src="' + (img.startsWith('data:') ? img : '../assets/img/' + img) + '" width="100" height="100" style="object-fit: cover;" class="border rounded">';
-                html += '<button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 0; right: 0;" onclick="deleteImage(' + index + ')">&times;</button>';
-                html += '</div>';
-            });
+            if (currentImages.length === 0) {
+                html = '<p class="text-muted">No images uploaded yet</p>';
+            } else {
+                currentImages.forEach(function(img, index) {
+                    // Handle both old format (with directory prefix) and new format (just filename)
+                    var imgSrc;
+                    if (img.startsWith('tours-image/') || img.startsWith('tours-image\\')) {
+                        imgSrc = '../assets/img/' + img;
+                    } else {
+                        imgSrc = '../assets/img/tours-image/' + img;
+                    }
+                    html += '<div class="d-inline-block mr-3 mb-3 position-relative image-preview-item" data-index="' + index + '">';
+                    html += '<div class="image-wrapper" style="width: 120px; height: 120px; overflow: hidden; border-radius: 8px; border: 2px solid #dee2e6; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+                    html += '<img src="' + imgSrc + '" style="width: 100%; height: 100%; object-fit: cover;" class="border-0">';
+                    html += '</div>';
+                    html += '<button type="button" class="btn btn-danger btn-sm position-absolute" style="top: -8px; right: -8px; width: 28px; height: 28px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" onclick="deleteImage(' + index + ')">&times;</button>';
+                    html += '<div class="image-badge position-absolute" style="bottom: 4px; left: 4px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px;">#' + (index + 1) + '</div>';
+                    html += '</div>';
+                });
+            }
             $('#currentImages').html(html);
+            $('#imageCount').text(currentImages.length + '/5');
         }
 
         function deleteImage(index) {
-            currentImages.splice(index, 1);
-            $('#currentImagesInput').val(JSON.stringify(currentImages));
-            renderCurrentImages();
+            var img = currentImages[index];
+            var tourId = $('#tourId').val();
+
+            // Confirm and delete via API
+            if (confirm('Are you sure you want to delete this image? This action cannot be undone.')) {
+                $.ajax({
+                    url: 'delete_tour_image.php',
+                    type: 'POST',
+                    data: {
+                        image_path: img,
+                        tour_id: tourId,
+                        csrf_token: '<?php echo htmlspecialchars(generateCSRFToken()); ?>'
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        // Show loading state
+                        $('.image-preview-item[data-index="' + index + '"]').addClass('opacity-50');
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            currentImages.splice(index, 1);
+                            $('#currentImagesInput').val(JSON.stringify(currentImages));
+                            renderCurrentImages();
+                        } else {
+                            alert('Error deleting image: ' + response.message);
+                            $('.image-preview-item[data-index="' + index + '"]').removeClass('opacity-50');
+                        }
+                    },
+                    error: function() {
+                        alert('Error deleting image. Please try again.');
+                        $('.image-preview-item[data-index="' + index + '"]').removeClass('opacity-50');
+                    }
+                });
+            }
         }
 
         // Highlights
@@ -1211,30 +1403,59 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 
         let cropper;
         let currentFile;
+        let pendingFiles = [];
+        let isUploading = false;
+
+        // Function to upload cropped image to server
+        function uploadCroppedImage(dataURL) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: 'tours.php',
+                    type: 'POST',
+                    data: {
+                        action: 'upload_cropped_image',
+                        image_data: dataURL,
+                        csrf_token: '<?php echo htmlspecialchars(generateCSRFToken()); ?>'
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            resolve(response.filename);
+                        } else {
+                            reject(new Error(response.message || 'Upload failed'));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        reject(new Error('Network error: ' + error));
+                    }
+                });
+            });
+        }
 
         $('#imageInput').on('change', function(e) {
             const files = Array.from(e.target.files);
+            
+            // Check if adding these files would exceed the limit
+            if (currentImages.length + files.length > 20) {
+                $('#uploadStatus').html('<div class="alert alert-warning">You can only upload up to 20 images total. You currently have ' + currentImages.length + ' images.</div>');
+                $('#imageInput').val('');
+                return;
+            }
+            
             if (files.length > 0) {
-                // Add previews for all selected files
-                files.forEach(function(file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        currentImages.push(e.target.result);
-                        renderCurrentImages();
-                    };
-                    reader.readAsDataURL(file);
-                });
-                // Crop the first file
+                pendingFiles = files;
+                // Show cropper for the first file
                 currentFile = files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     $('#cropperImage').attr('src', e.target.result);
                     $('#cropperContainer').show();
+                    $('#uploadStatus').html('<div class="alert alert-info">Cropping image 1 of ' + files.length + '. Click "Crop & Upload" to continue.</div>');
                     if (cropper) {
                         cropper.destroy();
                     }
                     cropper = new Cropper($('#cropperImage')[0], {
-                        aspectRatio: 16 / 9, // Adjust as needed for tour cards
+                        aspectRatio: 16 / 9,
                         viewMode: 1,
                         responsive: true,
                         restore: false,
@@ -1246,35 +1467,93 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                         highlight: false,
                         background: false,
                         autoCrop: true,
-                        autoCropArea: 0.8
+                        autoCropArea: 0.8,
+                        ready: function() {
+                            // Enable crop button when cropper is ready
+                            $('#cropBtn').prop('disabled', false);
+                        }
                     });
                 };
                 reader.readAsDataURL(files[0]);
             }
         });
 
-        $('#cropBtn').on('click', function() {
-            if (cropper) {
-                const canvas = cropper.getCroppedCanvas({
-                    width: 600, // Reduced size for smaller file
-                    height: 342 // Maintain aspect ratio
-                });
-                const dataURL = canvas.toDataURL('image/webp', 0.7);
-                canvas.toBlob(function(blob) {
-                    const timestamp = Date.now();
-                    const croppedFile = new File([blob], 'cropped_' + timestamp + '_' + currentFile.name, { type: 'image/webp' });
-                    const files = Array.from($('#imageInput')[0].files);
-                    files[0] = croppedFile;
-                    $('#imageInput')[0].files = new FileListItems(files);
-                    // Replace the first preview with cropped
-                    if (currentImages.length > 0) {
-                        currentImages[0] = dataURL;
-                    }
+        $('#cropBtn').on('click', async function() {
+            if (cropper && !isUploading) {
+                isUploading = true;
+                $('#cropBtn').prop('disabled', true);
+                $('#cropLoading').removeClass('d-none');
+                
+                try {
+                    const canvas = cropper.getCroppedCanvas({
+                        width: 800,
+                        height: 450
+                    });
+                    const dataURL = canvas.toDataURL('image/webp', 0.85);
+                    
+                    // Upload cropped image to server and get filename
+                    const filename = await uploadCroppedImage(dataURL);
+                    
+                    // Add filename to currentImages array
+                    currentImages.push(filename);
+                    $('#currentImagesInput').val(JSON.stringify(currentImages));
                     renderCurrentImages();
+                    
+                    // Remove the processed file from pendingFiles
+                    pendingFiles.shift();
+                    
+                    // Hide cropper
                     $('#cropperContainer').hide();
                     cropper.destroy();
                     cropper = null;
-                }, 'image/webp', 0.7); // Quality 0.7 for smaller file size
+                    
+                    // Process remaining files or clear input
+                    if (pendingFiles.length > 0) {
+                        // Show cropper for next file
+                        currentFile = pendingFiles[0];
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#cropperImage').attr('src', e.target.result);
+                            $('#cropperContainer').show();
+                            $('#uploadStatus').html('<div class="alert alert-info">Cropping image ' + (pendingFiles.length + 1) + ' of ' + (pendingFiles.length + currentImages.length) + '. Click "Crop & Upload" to continue.</div>');
+                            cropper = new Cropper($('#cropperImage')[0], {
+                                aspectRatio: 16 / 9,
+                                viewMode: 1,
+                                responsive: true,
+                                restore: false,
+                                checkCrossOrigin: false,
+                                checkOrientation: false,
+                                modal: true,
+                                guides: true,
+                                center: true,
+                                highlight: false,
+                                background: false,
+                                autoCrop: true,
+                                autoCropArea: 0.8,
+                                ready: function() {
+                                    $('#cropBtn').prop('disabled', false);
+                                }
+                            });
+                        };
+                        reader.readAsDataURL(currentFile);
+                    } else {
+                        // All files processed
+                        $('#imageInput').val('');
+                        $('#uploadStatus').html('<div class="alert alert-success">All images cropped and uploaded successfully!</div>');
+                        setTimeout(function() {
+                            $('#uploadStatus').html('');
+                        }, 3000);
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    $('#uploadStatus').html('<div class="alert alert-danger">Error uploading image: ' + error.message + '</div>');
+                    setTimeout(function() {
+                        $('#uploadStatus').html('');
+                    }, 5000);
+                } finally {
+                    isUploading = false;
+                    $('#cropLoading').addClass('d-none');
+                }
             }
         });
 
@@ -1284,14 +1563,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 cropper.destroy();
                 cropper = null;
             }
+            pendingFiles = [];
+            $('#imageInput').val('');
+            $('#uploadStatus').html('');
+            $('#cropBtn').prop('disabled', true);
         });
-
-        // Helper for FileList
-        function FileListItems(files) {
-            const b = new ClipboardEvent("").clipboardData || new DataTransfer();
-            for (let i = 0, len = files.length; i < len; i++) b.items.add(files[i]);
-            return b.files;
-        }
 
         // Auto-generate slug from title
         $(document).ready(function() {
@@ -1361,6 +1637,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
             $('#includedInput').val(JSON.stringify(included));
             $('#excludedInput').val(JSON.stringify(excluded));
             $('#itineraryInput').val(JSON.stringify(itinerary));
+            
+            // Update current images input
+            $('#currentImagesInput').val(JSON.stringify(currentImages));
+            
             return true;
         }
 
