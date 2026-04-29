@@ -1,8 +1,8 @@
-### HOSTINGER LITESHIELD RECAPTCHA, DO NOT REMOVE THIS LINE ###
-RewriteEngine On
-LsRecaptcha 100
-RewriteRule .* - [E=verifycaptcha:drop]
-### HOSTINGER LITESHIELD RECAPTCHA, DO NOT REMOVE THIS LINE ###
+# ### HOSTINGER LITESHIELD RECAPTCHA - DISABLED ###
+# RewriteEngine On
+# LsRecaptcha 100
+# RewriteRule .* - [E=verifycaptcha:drop]
+# ### HOSTINGER LITESHIELD RECAPTCHA - DISABLED ###
 RewriteEngine On
 
 # EMERGENCY DDoS PROTECTION - Enhanced
