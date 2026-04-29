@@ -1,0 +1,2 @@
+[28-Apr-2026 02:29:54 UTC] PHP Fatal error:  Cannot redeclare generateCSRFToken() (previously declared in /home/u615191172/domains/indiadaytrip.com/public_html/api/mail.php:18) in /home/u615191172/domains/indiadaytrip.com/public_html/functions.php on line 926
+[28-Apr-2026 02:29:54 UTC] PHP Fatal error:  Cannot redeclare generateCSRFToken() (previously declared in /home/u615191172/domains/indiadaytrip.com/public_html/api/mail.php:18) in /home/u615191172/domains/indiadaytrip.com/public_html/functions.php on line 926

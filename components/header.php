@@ -94,7 +94,7 @@ $phone_href = preg_replace('/[^0-9+]/', '', $contact_mobile);
                                 class="far fa-bars"></i></button>
                     </div>
                     <div class="col-auto d-none d-xl-block">
-                        <div class="header-button"><a href="<?php echo $base_path; ?>to_book/index.php" class="th-btn style3 th-icon">Book Now</a>
+                        <div class="header-button"><a href="<?php echo $base_path; ?>/to_book/index.php" class="th-btn style3 th-icon">Book Now</a>
                         </div>
                     </div>
                 </div>

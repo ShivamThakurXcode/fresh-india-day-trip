@@ -97,6 +97,24 @@ if ($searchFilter) {
         .status-processed { background-color: #007bff; color: #fff; }
         .status-completed { background-color: #28a745; color: #fff; }
         .modal-dialog { max-width: 800px; }
+
+        /* Form elements consistent height */
+        .form-control, .btn {
+            min-height: 38px;
+        }
+        
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .page-header-row h1 {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -104,11 +122,16 @@ if ($searchFilter) {
     <?php include 'header.php'; ?>
     <div class="main-content">
         <div class="content-wrapper">
-            <div class="d-flex mb-3 justify-content-between align-items-center">
+            <div class="page-header-row">
                 <h1 class="page-title">Contact Inquiries</h1>
-                <?php if ($message): ?>
-                    <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
-                <?php endif; ?>
+                <div class="d-flex align-items-center gap-2">
+                    <?php if ($message): ?>
+                        <div class="alert alert-info mb-0"><?php echo htmlspecialchars($message); ?></div>
+                    <?php endif; ?>
+                    <a href="export-csv.php?type=contact_inquiries<?php echo $statusFilter ? '&status=' . $statusFilter : ''; ?><?php echo $searchFilter ? '&search=' . urlencode($searchFilter) : ''; ?>" class="btn btn-success">
+                        <i class="fas fa-file-csv"></i> Export to CSV
+                    </a>
+                </div>
             </div>
             
             <!-- Filters -->
@@ -134,49 +157,6 @@ if ($searchFilter) {
                             <a href="contact-inquiries.php" class="btn btn-secondary w-100">Clear Filters</a>
                         </div>
                     </form>
-                </div>
-            </div>
-            
-            <!-- Export Button -->
-            <div class="mb-3">
-                <a href="export-csv.php?type=contact_inquiries<?php echo $statusFilter ? '&status=' . $statusFilter : ''; ?><?php echo $searchFilter ? '&search=' . urlencode($searchFilter) : ''; ?>" class="btn btn-success">
-                    <i class="fas fa-file-csv"></i> Export to CSV
-                </a>
-            </div>
-            
-            <!-- Stats -->
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5>Total</h5>
-                            <h3><?php echo $pdo->query("SELECT COUNT(*) FROM contact_inquiries")->fetchColumn(); ?></h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5>Pending</h5>
-                            <h3><?php echo $pdo->query("SELECT COUNT(*) FROM contact_inquiries WHERE status = 'pending'")->fetchColumn(); ?></h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5>Processed</h5>
-                            <h3><?php echo $pdo->query("SELECT COUNT(*) FROM contact_inquiries WHERE status = 'processed'")->fetchColumn(); ?></h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5>Completed</h5>
-                            <h3><?php echo $pdo->query("SELECT COUNT(*) FROM contact_inquiries WHERE status = 'completed'")->fetchColumn(); ?></h3>
-                        </div>
-                    </div>
                 </div>
             </div>
             

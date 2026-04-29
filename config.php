@@ -2,8 +2,8 @@
 // Database configuration
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'u615191172_india_day_trip');
-define('DB_USER', 'u615191172_developer'); // Change as needed
-define('DB_PASS', '8958Shivay'); // Change as needed
+define('DB_USER', 'u615191172_website_dev'); // Change as needed
+define('DB_PASS', 'Anshul@895839'); // Change as needed
 
 // define('DB_HOST', 'localhost');
 // define('DB_NAME', 'u615191172_india_day_trip');

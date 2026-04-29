@@ -1299,26 +1299,36 @@ if (!isset($tour)) {
                     <?php
 $images = json_decode($tour['images'], true) ?: [];
 $imageCount = count($images);
+
+// Helper to normalize image path
+function normalizeTourDetailImagePath($imagePath) {
+    if (empty($imagePath)) return '';
+    if (strpos($imagePath, 'tours-image/') === 0 || strpos($imagePath, 'tours-image\\') === 0) {
+        return $imagePath;
+    }
+    return 'tours-image/' . $imagePath;
+}
+
 if ($imageCount == 0) {
     echo '<p>No images available.</p>';
 }
 elseif ($imageCount == 1) {
     echo '<div class="tour-gallery-single">';
-    echo '<img src="../assets/img/' . htmlspecialchars($images[0]) . '" alt="' . htmlspecialchars($tour['title']) . '">';
+    echo '<img src="../assets/img/' . htmlspecialchars(normalizeTourDetailImagePath($images[0])) . '" alt="' . htmlspecialchars($tour['title']) . '">';
     echo '</div>';
 }
 elseif ($imageCount == 2) {
     echo '<div class="tour-gallery-two">';
     foreach ($images as $image) {
-        echo '<img src="../assets/img/' . htmlspecialchars($image) . '" alt="' . htmlspecialchars($tour['title']) . '">';
+        echo '<img src="../assets/img/' . htmlspecialchars(normalizeTourDetailImagePath($image)) . '" alt="' . htmlspecialchars($tour['title']) . '">';
     }
     echo '</div>';
 }
 else {
     echo '<div class="tour-gallery-main">';
-    echo '<div class="gallery-img gallery-large" style="background-image: url(\'../assets/img/' . htmlspecialchars($images[0]) . '\');"></div>';
+    echo '<div class="gallery-img gallery-large" style="background-image: url(\'../assets/img/' . htmlspecialchars(normalizeTourDetailImagePath($images[0])) . '\');"></div>';
     for ($i = 1; $i < min(3, $imageCount); $i++) {
-        echo '<div class="gallery-img gallery-small" style="background-image: url(\'../assets/img/' . htmlspecialchars($images[$i]) . '\');"></div>';
+        echo '<div class="gallery-img gallery-small" style="background-image: url(\'../assets/img/' . htmlspecialchars(normalizeTourDetailImagePath($images[$i])) . '\');"></div>';
     }
     if ($imageCount > 3) {
         $remaining = $imageCount - 3;
@@ -1682,7 +1692,12 @@ foreach ($relatedTours as $relatedTour): ?>
                             <div class="related-tour-card">
                                 <a href="../tour/<?php echo $relatedTour['slug']; ?>">
                                     <div class="tour-img">
-                                        <img src="../assets/img/<?php echo json_decode($relatedTour['images'], true)[0] ?? 'default.webp'; ?>"
+                                        <?php
+                                        $relImages = json_decode($relatedTour['images'], true) ?: [];
+                                        $relFirstImage = !empty($relImages) ? $relImages[0] : 'default.webp';
+                                        $relImagePath = (strpos($relFirstImage, 'tours-image/') === 0 || strpos($relFirstImage, 'tours-image\\') === 0) ? $relFirstImage : 'tours-image/' . $relFirstImage;
+                                        ?>
+                                        <img src="../assets/img/<?php echo htmlspecialchars($relImagePath); ?>"
                                             alt="<?php echo htmlspecialchars($relatedTour['title']); ?>">
                                     </div>
 
@@ -1731,7 +1746,8 @@ endforeach; ?>
                         <?php
 $images = json_decode($tour['images'], true) ?: [];
 foreach ($images as $image) {
-    echo '<img src="../assets/img/' . htmlspecialchars($image) . '" alt="' . htmlspecialchars($tour['title']) . '" class="gallery-modal-img">';
+    $normalizedImage = normalizeTourDetailImagePath($image);
+    echo '<img src="../assets/img/' . htmlspecialchars($normalizedImage) . '" alt="' . htmlspecialchars($tour['title']) . '" class="gallery-modal-img">';
 }
 ?>
                     </div>

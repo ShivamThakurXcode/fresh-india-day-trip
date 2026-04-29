@@ -66,13 +66,33 @@ function getDBConnection() {
 }
 
 /**
+ * Normalize tour image path - handles both old (with prefix) and new (without prefix) formats
+ *
+ * @param string $imagePath The image path from database
+ * @return string Normalized path with tours-image/ prefix
+ */
+function normalizeTourImagePath($imagePath) {
+    if (empty($imagePath)) {
+        return 'tours-image/default.webp';
+    }
+    // If path already has tours-image/ prefix, return as-is
+    if (strpos($imagePath, 'tours-image/') === 0 || strpos($imagePath, 'tours-image\\') === 0) {
+        return $imagePath;
+    }
+    // Otherwise, prepend tours-image/
+    return 'tours-image/' . $imagePath;
+}
+
+/**
  * Render a tour card
  *
  * @param array $tour Tour data from database
  * @return string HTML for the tour card
  */
 function renderTourCard($tour) {
-    $imagePath = $tour['images'] ? json_decode($tour['images'], true)[0] : 'taj_mahal_tour/taj_mahal-1.webp';
+    $images = $tour['images'] ? json_decode($tour['images'], true) : [];
+    $firstImage = !empty($images) ? $images[0] : 'taj_mahal_tour/taj_mahal-1.webp';
+    $imagePath = normalizeTourImagePath($firstImage);
     $imageUrl = "../assets/img/{$imagePath}";
     $detailUrl = "../tour/{$tour['slug']}";
     $rating = number_format($tour['rating'], 1);
@@ -212,7 +232,9 @@ function getTours($category = null, $limit = null, $exclude_id = null, $search =
  * @return string HTML for the tour box
  */
 function renderTourBox($tour) {
-    $imagePath = $tour['images'] ? json_decode($tour['images'], true)[0] : 'default.webp';
+    $images = $tour['images'] ? json_decode($tour['images'], true) : [];
+    $firstImage = !empty($images) ? $images[0] : 'default.webp';
+    $imagePath = normalizeTourImagePath($firstImage);
     $imageUrl = "assets/img/{$imagePath}";
     $detailUrl = "tour/{$tour['slug']}";
     $rating = number_format($tour['rating'], 1);
