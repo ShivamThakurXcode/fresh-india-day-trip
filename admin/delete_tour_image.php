@@ -27,26 +27,56 @@ try {
         $fullPath = '../assets/img/' . $imagePath;
     } else {
         // New format: just the filename, need to add directory
-        if (strpos($imagePath, '/') !== false || strpos($imagePath, '\\') !== false) {
-            throw new Exception('Invalid image path');
+        // Allow only filenames with alphanumeric, dash, underscore, and dot
+        if (preg_match('/[^a-zA-Z0-9._-]/', $imagePath)) {
+            throw new Exception('Invalid image path format: ' . $imagePath);
         }
         $fullPath = '../assets/img/tours-image/' . $imagePath;
     }
 
+    // Convert to absolute path for reliable file checking
+    $baseDir = realpath(__DIR__ . '/../assets/img/tours-image/');
+    if ($baseDir === false) {
+        $baseDir = __DIR__ . '/../assets/img/tours-image/';
+    }
+    
+    // For paths with tours-image prefix, extract just the filename
+    if (strpos($imagePath, 'tours-image/') === 0 || strpos($imagePath, 'tours-image\\') === 0) {
+        $filename = basename($imagePath);
+    } else {
+        $filename = $imagePath;
+    }
+    
+    $fullPath = rtrim($baseDir, '/\\') . DIRECTORY_SEPARATOR . $filename;
+    $fileExists = false;
+
     // Check if file exists
     if (!file_exists($fullPath)) {
-        throw new Exception('Image file not found');
+        // Try relative path as fallback
+        $relPath = '../assets/img/tours-image/' . $filename;
+        if (file_exists($relPath)) {
+            $fullPath = $relPath;
+        } else {
+            // File doesn't exist, but we'll still remove it from the database
+            // This handles orphaned database entries
+            $fileExists = false;
+        }
+    } else {
+        $fileExists = true;
     }
 
-    // Verify it's actually an image file
-    $imageInfo = @getimagesize($fullPath);
-    if ($imageInfo === false) {
-        throw new Exception('File is not a valid image');
-    }
+    // Only verify and delete if file exists
+    if ($fileExists) {
+        // Verify it's actually an image file
+        $imageInfo = @getimagesize($fullPath);
+        if ($imageInfo === false) {
+            throw new Exception('File is not a valid image');
+        }
 
-    // Delete the file
-    if (!unlink($fullPath)) {
-        throw new Exception('Failed to delete image file');
+        // Delete the file
+        if (!unlink($fullPath)) {
+            throw new Exception('Failed to delete image file');
+        }
     }
 
     // If tour_id is provided, update the tour's images array in database
